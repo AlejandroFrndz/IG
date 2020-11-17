@@ -7,3 +7,7 @@ void Luz::activar(){
     glLightfv(id,GL_AMBIENT,colorAmbiente);
     glLightfv(id,GL_POSITION,posicion);
 }
+
+void Luz::desactivar(){
+    glDisable(id);
+}

@@ -12,6 +12,7 @@
 #include "esfera.h"
 #include "semiesfera.h"
 #include "luzposicional.h"
+#include "luzdireccional.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO,SELILUMINACION} menu;
 
@@ -63,7 +64,10 @@ class Escena
     bool conoB = true;
     bool esferaB = true;
     bool semiesferaB = true;
-    bool luz0B = true;
+    bool luz0B = false;
+    bool luz1B = true;
+    bool varA = false;
+    bool varB = false;
 
     // Objetos de la escena
     Ejes ejes;
@@ -79,6 +83,7 @@ class Escena
     Esfera * esfera = nullptr;
     Semiesfera * semiesfera = nullptr;
     LuzPosicional * luz0 = nullptr;
+    LuzDireccional * luz1 = nullptr;
 
     //Materiales
     Material oro, plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda; 

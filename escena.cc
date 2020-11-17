@@ -60,6 +60,8 @@ void Escena::crear_objetos(){
 
    //LuzPosicional
    luz0 = new LuzPosicional({0.0,0.0,0.0},GL_LIGHT0,{0.5,0.5,0.5,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
+   //LuzDireccional
+   luz1 = new LuzDireccional({0.0,0.0},GL_LIGHT1,{0.0,0.0,0.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
 }
 
 void Escena::crear_materiales(){
@@ -118,8 +120,16 @@ void Escena::dibujar()
    if(smooth || flat){
       glEnable(GL_LIGHTING);
       glEnable(GL_NORMALIZE);
+      
       if(luz0B)
          luz0->activar();
+
+      if(luz1B){
+         glPushMatrix();
+            //glLoadIdentity();
+            luz1->activar();
+         glPopMatrix();
+      }
    }
 
    //Selección del objeto activo
@@ -190,6 +200,8 @@ void Escena::dibujar()
    if(smooth || flat){
       glDisable(GL_LIGHTING);
       glDisable(GL_NORMALIZE);
+      luz0->desactivar();
+      luz1->desactivar();
    }
     
 }
@@ -342,8 +354,13 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             }
 
             cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
-            cout << "Activar/Desactivar Iluminación: A\n";
+            cout << "Activar/Desactivar Iluminación: P\n";
             cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
+            cout << "Encender/Apagar luz: 0-1\n";
+            cout << "Variación de Alpha: A\n";
+            cout << "Variación de Beta: B\n";
+            cout << "Incrementar Ángulo: >\n";
+            cout << "Decrementar Ángulo: <\n";
          }
 
          else{
@@ -394,6 +411,41 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                cout << "Activar/Desactivar Peon: P\n";
                cout << "Volver al menú principal: Q\n";
             }
+
+            else if(modoMenu==SELILUMINACION){
+               if(!flat && !smooth){
+                  cout << "Se ha activado la Iluminación y encendido ambas luces\n";
+                  smooth = true;
+                  flat = false;
+                  ajedrez = false;
+                  puntos = false;
+                  lineas = false;
+                  solido = false;
+                  luz0B = true;
+                  luz1B = true;
+               }
+
+               else{
+                  cout << "Se ha desactivado la Iluminación y apagado ambas luces\n";
+                  smooth = false;
+                  flat = false;
+                  solido = true;
+                  luz0B = false;
+                  luz1B = false;
+                  varA = false;
+                  varB = false;
+               }
+
+               cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
+               cout << "Activar/Desactivar Iluminación: P\n";
+               cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
+               cout << "Encender/Apagar luz: 0-1\n";
+               cout << "Variación de Alpha: A\n";
+               cout << "Variación de Beta: B\n";
+               cout << "Incrementar Ángulo: >\n";
+               cout << "Decrementar Ángulo: <\n";
+            }
+
             else{
                cout << "Opción inválida\n";
             }
@@ -480,26 +532,67 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
 
          else if(modoMenu==SELILUMINACION){
-            if(!flat && !smooth){
-               cout << "Se ha activado la Iluminación\n";
-               smooth = true;
-               flat = false;
-               ajedrez = false;
-               puntos = false;
-               lineas = false;
-               solido = false;
+            if(!varA){
+               cout << "Se ha seleccionado la variación del ángulo alpha\n";
+               varA = true;
+               varB = false;
             }
-
             else{
-               cout << "Se ha desactivado la Iluminación\n";
-               smooth = false;
-               flat = false;
-               solido = true;
+               cout << "Se ha deseleccionado la variación del ángulo alpha\n";
+               varA = false;
+            }
+            cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
+            cout << "Activar/Desactivar Iluminación: P\n";
+            cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
+            cout << "Encender/Apagar luz: 0-1\n";
+            cout << "Variación de Alpha: A\n";
+            cout << "Variación de Beta: B\n";
+            cout << "Incrementar Ángulo: >\n";
+            cout << "Decrementar Ángulo: <\n";
+         }
+
+         else{
+            cout << "Opción inválida\n";
+         }
+      break;
+
+      case 'B':
+         if(modoMenu==SELILUMINACION){
+            if(!varA){
+               cout << "Se ha seleccionado la variación del ángulo beta\n";
+               varB = true;
+               varA = false;
+            }
+            else{
+               cout << "Se ha deseleccionado la variación del ángulo beta\n";
+               varB = false;
             }
 
             cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
-            cout << "Activar/Desactivar Iluminación: A\n";
+            cout << "Activar/Desactivar Iluminación: P\n";
             cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
+            cout << "Encender/Apagar luz: 0-1\n";
+            cout << "Variación de Alpha: A\n";
+            cout << "Variación de Beta: B\n";
+            cout << "Incrementar Ángulo: >\n";
+            cout << "Decrementar Ángulo: <\n";
+         }
+
+         else{
+            cout << "Opción inválida\n";
+         }
+      break;
+
+      case '0':
+         if(modoMenu==SELILUMINACION){
+            if(!luz0B){
+               cout << "Se ha activado la luz 0 (posicional)\n";
+               luz0B = true;
+            }
+            else{
+               cout << "Se ha desactivado la luz 0 (posicional)\n";
+               luz0B = false;
+            }
          }
 
          else{
@@ -516,6 +609,19 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar el dibujado en modo inmediato con glDrawElements: 1\n";
             cout << "Activar el dibujado en modo diferido con VBOs (por defecto): 2\n";
             cout << "Volver al menú principal: Q\n";
+         }
+
+         else if(modoMenu==SELILUMINACION){
+            if(!luz1B){
+               cout << "Se ha activado la luz 1 (direccional)\n";
+               luz1B = true;
+            }
+            else{
+               cout << "Se ha desactivado la luz 1 (direccional)\n";
+               luz1B = false; 
+               varA = false;
+               varB = false;
+            }
          }
          else{
             cout << "Opción inválida\n";
@@ -644,8 +750,39 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case 'I':
          modoMenu = SELILUMINACION;
          cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
-         cout << "Activar/Desactivar Iluminación: A\n";
+         cout << "Activar/Desactivar Iluminación: P\n";
          cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
+         cout << "Encender/Apagar luz: 0-1\n";
+         cout << "Variación de Alpha: A\n";
+         cout << "Variación de Beta: B\n";
+         cout << "Incrementar Ángulo: >\n";
+         cout << "Decrementar Ángulo: <\n";
+      break;
+
+      case '>':
+         if(varA){
+            cout << "Ángulo alpha actual: " << luz1->variarAnguloAlpha(40) << endl;
+         }
+         else if(varB){
+            cout << "Ángulo beta actual: " << luz1->variarAnguloBeta(20) << endl;
+         }
+
+         else{
+            cout << "No se ha seleccionado ningún ángulo o la luz1 está desactivada\n";
+         }
+      break;
+
+      case '<':
+         if(varA){
+            cout << "Ángulo alpha actual: " << luz1->variarAnguloAlpha(-40) << endl;
+         }
+         else if(varB){
+            cout << "Ángulo beta actual: " << luz1->variarAnguloBeta(-20) << endl;
+         }
+
+         else{
+            cout << "No se ha seleccionado ningún ángulo o la luz1 está desactivada\n";
+         }
       break;
 
       default :

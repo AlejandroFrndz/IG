@@ -21,6 +21,7 @@ class Luz{
         Tupla4f colorEspecular;
     public:
         void activar();
+        void desactivar();
 };
 
 #endif
