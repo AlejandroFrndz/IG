@@ -20,6 +20,41 @@ void Malla3D::establecer_colores(){
    }
 }
 
+//Calculo de las tablas de normales
+void Malla3D::calcular_normales(){
+   Tupla3f a,b,n,p,q,r,normal;
+   nv = std::vector<Tupla3f>(v.size(), {0,0,0});
+
+   for(int i = 0; i < f.size(); i++){
+      p = v[f[i](0)];
+      q = v[f[i](1)];
+      r = v[f[i](2)];
+
+      a = q-p;
+      b = r-p;
+
+      n = a.cross(b);
+      
+      normal = n.normalized();
+      nc.push_back(normal);
+   }
+
+   for(int i = 0; i < f.size(); i++){
+      nv[f[i][0]] = (nv[f[i][0]] + nc[i]);
+      nv[f[i][1]] = (nv[f[i][1]] + nc[i]);
+      nv[f[i][2]] = (nv[f[i][2]] + nc[i]);
+   }
+
+   for(int i = 0; i < nv.size(); i++){
+      nv[i] = nv[i].normalized();
+   }
+}
+
+//Asignación del material de la malla
+void Malla3D::setMaterial(Material mat){
+   m = mat;
+}
+
 // Visualización en modo inmediato con 'glDrawElements'
 
 void Malla3D::draw_ModoInmediato(visualizacion modo_visualizacion)
@@ -28,24 +63,31 @@ void Malla3D::draw_ModoInmediato(visualizacion modo_visualizacion)
   // completar (práctica 1)
    glEnableClientState(GL_VERTEX_ARRAY);
    glVertexPointer(3, GL_FLOAT, 0 , v.data());
-   glEnableClientState(GL_COLOR_ARRAY);
    switch (modo_visualizacion)
    {
    case PUNTOS:
+      glEnableClientState(GL_COLOR_ARRAY);
       glColorPointer(3, GL_FLOAT, 0, c_puntos.data());
    break;
    
    case ALAMBRE:
+      glEnableClientState(GL_COLOR_ARRAY);
       glColorPointer(3, GL_FLOAT, 0, c_lineas.data());
    break;
 
    case SOLIDO:
+      glEnableClientState(GL_COLOR_ARRAY);
       glColorPointer(3, GL_FLOAT, 0, c_solido.data());
    break;
+
+   case LUZ:
+      glEnableClientState(GL_NORMAL_ARRAY);
+      glNormalPointer(GL_FLOAT,0,nv.data());
    }
    glDrawElements(GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, f.data());
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
+   glDisableClientState(GL_NORMAL_ARRAY);
 }
 // -----------------------------------------------------------------------------
 // Visualización en modo diferido con 'glDrawElements' (usando VBOs)
@@ -71,24 +113,40 @@ void Malla3D::draw_ModoDiferido(visualizacion modo_visualizacion)
       if(VBO_c_puntos == 0)
          VBO_c_puntos = CrearVBO(GL_ARRAY_BUFFER, 3*c_puntos.size()*sizeof(float), c_puntos.data());
       glBindBuffer(GL_ARRAY_BUFFER, VBO_c_puntos);
+      glColorPointer(3, GL_FLOAT,0,0);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glEnableClientState(GL_COLOR_ARRAY);
    break;
 
    case ALAMBRE:
       if(VBO_c_lineas == 0)
          VBO_c_lineas = CrearVBO(GL_ARRAY_BUFFER, 3*c_lineas.size()*sizeof(float), c_lineas.data());
       glBindBuffer(GL_ARRAY_BUFFER, VBO_c_lineas);
+      glColorPointer(3, GL_FLOAT,0,0);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glEnableClientState(GL_COLOR_ARRAY);
    break;
 
    case SOLIDO:
       if(VBO_c_solido == 0)
          VBO_c_solido = CrearVBO(GL_ARRAY_BUFFER, 3*c_solido.size()*sizeof(float), c_solido.data());
       glBindBuffer(GL_ARRAY_BUFFER, VBO_c_solido);
+      glColorPointer(3, GL_FLOAT,0,0);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glEnableClientState(GL_COLOR_ARRAY);
+   break;
+
+   case LUZ:
+      if(VBO_nv == 0)
+         VBO_nv = CrearVBO(GL_ARRAY_BUFFER, 3*nv.size()*sizeof(float), nv.data());
+      glBindBuffer(GL_ARRAY_BUFFER,VBO_nv);
+      glNormalPointer(GL_FLOAT,0,0);
+      glBindBuffer(GL_ARRAY_BUFFER,0);
+      glEnableClientState(GL_NORMAL_ARRAY);
    break;
    }
 
-   glColorPointer(3, GL_FLOAT,0,0);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-   glEnableClientState(GL_COLOR_ARRAY);
+
 
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_f);
    glDrawElements(GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, 0);
@@ -96,6 +154,7 @@ void Malla3D::draw_ModoDiferido(visualizacion modo_visualizacion)
 
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
+   glDisableClientState(GL_NORMAL_ARRAY);
    
 }
 
@@ -204,8 +263,13 @@ void Malla3D::draw_Ajedrez_Diferido(){
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
 
-void Malla3D::draw(bool puntos, bool alambre, bool solido, bool ajedrez, dibujado modo_dibujado)
+void Malla3D::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smooth, bool flat, dibujado modo_dibujado)
 {
+
+   if(nv.empty()){
+      calcular_normales();
+   }
+
    if(puntos){
       glPointSize(3);
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
@@ -245,6 +309,28 @@ void Malla3D::draw(bool puntos, bool alambre, bool solido, bool ajedrez, dibujad
          this->draw_Ajedrez_Inmediato();
       else
          this->draw_Ajedrez_Diferido();
+   }
+
+   if(smooth){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      glShadeModel(GL_SMOOTH);
+      m.aplicar();
+
+      if(modo_dibujado == INMEDIATO)
+         this->draw_ModoInmediato(LUZ);
+      else
+         this->draw_ModoDiferido(LUZ);
+   }
+
+   if(flat){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      glShadeModel(GL_FLAT);
+      m.aplicar();
+
+      if(modo_dibujado == INMEDIATO)
+         this->draw_ModoInmediato(LUZ);
+      else
+         this->draw_ModoDiferido(LUZ);
    }
 
 }

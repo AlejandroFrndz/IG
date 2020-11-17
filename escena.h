@@ -11,8 +11,9 @@
 #include "cono.h"
 #include "esfera.h"
 #include "semiesfera.h"
+#include "luzposicional.h"
 
-typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
+typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO,SELILUMINACION} menu;
 
 class Escena
 {
@@ -23,13 +24,13 @@ class Escena
 
  // ** PARÁMETROS DE LA CÁMARA (PROVISIONAL)
        
-       // variables que definen la posicion de la camara en coordenadas polares
-   GLfloat Observer_distance;
-   GLfloat Observer_angle_x;
-   GLfloat Observer_angle_y;
+    // variables que definen la posicion de la camara en coordenadas polares
+    GLfloat Observer_distance;
+    GLfloat Observer_angle_x;
+    GLfloat Observer_angle_y;
 
-   // variables que controlan la ventana y la transformacion de perspectiva
-   GLfloat Width, Height, Front_plane, Back_plane;
+    // variables que controlan la ventana y la transformacion de perspectiva
+    GLfloat Width, Height, Front_plane, Back_plane;
 
     // Transformación de cámara
 	void change_projection( const float ratio_xy );
@@ -38,32 +39,37 @@ class Escena
     //creación de objetos de la escena
     void crear_objetos();
 
-   void clear_window();
+    //creación de los materiales para la escena
+    void crear_materiales();
 
-   menu modoMenu=NADA;
+    void clear_window();
 
-   //Variables para opciones de menú
+    menu modoMenu=NADA;
+
+    //Variables para opciones de menú
     bool solido = true;
     bool puntos = false;
     bool lineas = false;
     bool ajedrez = false;
     bool tapas = true;
+    bool smooth = false;
+    bool flat = false;
     dibujado modo_dibujado = DIFERIDO;
     bool cuboB = true;
     bool tetraedroB = true;
     bool objetoPLYB = true;
-    bool lataB = true;
     bool peonB = true;
     bool cilindroB = true;
     bool conoB = true;
     bool esferaB = true;
     bool semiesferaB = true;
+    bool luz0B = true;
 
-   // Objetos de la escena
-   Ejes ejes;
-   Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
-   Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
-   ObjPLY * objeto_ply = nullptr;
+    // Objetos de la escena
+    Ejes ejes;
+    Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
+    Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
+    ObjPLY * objeto_ply = nullptr;
     ObjRevolucion * lata_superior = nullptr;
     ObjRevolucion * lata_cuerpo = nullptr;
     ObjRevolucion * lata_inferior = nullptr;
@@ -72,8 +78,12 @@ class Escena
     Cono * cono = nullptr;
     Esfera * esfera = nullptr;
     Semiesfera * semiesfera = nullptr;
+    LuzPosicional * luz0 = nullptr;
+
+    //Materiales
+    Material oro, plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda; 
    
-   public:
+    public:
 
     Escena();
 	void inicializar( int UI_window_width, int UI_window_height );

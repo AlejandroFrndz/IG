@@ -30,7 +30,7 @@ class ObjRevolucion : public Malla3D
         ObjRevolucion();
         ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, short eje=1) ;
         ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, short eje=1) ;
-        void draw (bool puntos, bool alambre, bool solido, bool ajedrez, dibujado modo_dibujado, bool tapas);
+        void draw (bool puntos, bool alambre, bool solido, bool ajedrez, bool smooth, bool flat, dibujado modo_dibujado, bool tapas);
 
     protected:
         Tupla3f poloNorte, poloSur;

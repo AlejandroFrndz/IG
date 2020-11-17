@@ -18,6 +18,7 @@ Escena::Escena()
 
     ejes.changeAxisSize( 5000 );
 
+   crear_materiales();
    crear_objetos();
 
 
@@ -27,34 +28,48 @@ void Escena::crear_objetos(){
    //Cubo
    cubo = new Cubo(1.0);
    cubo->establecer_colores();
+   cubo->setMaterial(obsidiana);
    //Tetraedro
    tetraedro = new Tetraedro();
    tetraedro->establecer_colores();
+   tetraedro->setMaterial(esmeralda);
    //Objeto PLY
    objeto_ply = new ObjPLY("./plys/ant.ply");
    objeto_ply->establecer_colores();
-   //Lata
-   lata_superior = new ObjRevolucion("./plys/lata-psup.ply",25,true,false);
-   lata_cuerpo = new ObjRevolucion("./plys/lata-pcue.ply",25,false,false);
-   lata_inferior = new ObjRevolucion("./plys/lata-pinf.ply",25,false,true);
-   lata_superior->establecer_colores();
-   lata_cuerpo->establecer_colores();
-   lata_inferior->establecer_colores();
+   objeto_ply->setMaterial(plata);
    //Peon
    peon = new ObjRevolucion("./plys/reverse_peon-z.ply",25,true,true,2);
    peon->establecer_colores();
+   peon->setMaterial(plastico_verde);
    //Cilindro
    cilindro = new Cilindro(5,25,2,1);
    cilindro->establecer_colores();
+   cilindro->setMaterial(bronce);
    //Cono
    cono = new Cono(10,25,1,0.5);
    cono->establecer_colores();
+   cono->setMaterial(oro);
    //Esfera
    esfera = new Esfera(20,35,1);
    esfera->establecer_colores();
+   esfera->setMaterial(goma_amarilla);
    //Semiesfera
    semiesfera = new Semiesfera(20,35,1);
    semiesfera->establecer_colores();
+   semiesfera->setMaterial(esmeralda);
+
+   //LuzPosicional
+   luz0 = new LuzPosicional({0.0,0.0,0.0},GL_LIGHT0,{0.5,0.5,0.5,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
+}
+
+void Escena::crear_materiales(){
+   oro = Material({0.24725,0.1995,0.0745,1.0},{0.75164,0.60648,0.22648,1.0},{0.628281,0.555802,0.366065,1.0},0.4*128);
+   plata = Material({0.19225,0.19225,0.19225,1.0},{0.50754,0.50754,0.50754,1.0},{0.508273,0.508273,0.508273,1.0},0.4*128);
+   bronce = Material({0.2125,0.1275,0.054,1.0},{0.714,0.4284,0.18144,1.0},{0.393548,0.271906,0.166721,1.0},0.2*128);
+   obsidiana = Material({0.05375,0.05,0.06625,1.0},{0.18275,0.17,0.22525,1.0},{0.332741,0.328634,0.346435,1.0},0.3*128);
+   plastico_verde = Material({0.0,0.0,0.0,1.0},{0.1,0.35,0.1,1.0},{0.45,0.55,0.45,1.0},0.25*128);
+   goma_amarilla = Material({0.05,0.05,0.0,1.0},{0.5,0.5,0.4,1.0},{0.7,0.7,0.04,1.0},0.078125*128);
+   esmeralda = Material({0.0215,0.1745,0.0215,1.0},{0.07568,0.61424,0.07568,1.0},{0.633,0.727811,0.633,1.0},0.6*128);
 }
 
 //**************************************************************************
@@ -80,6 +95,7 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
    std::cout << "Selección de Objeto: O\n";
    std::cout << "Modo de Visualización: V\n";
    std::cout << "Modo de Dibujado: D\n";
+   std::cout << "Opciones de Iluminación: I\n";
    std::cout << "Salir: Q\n";
 }
 
@@ -97,14 +113,21 @@ void Escena::dibujar()
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
    glEnable(GL_CULL_FACE);
-   ejes.draw(); 
+   ejes.draw();
+
+   if(smooth || flat){
+      glEnable(GL_LIGHTING);
+      glEnable(GL_NORMALIZE);
+      if(luz0B)
+         luz0->activar();
+   }
 
    //Selección del objeto activo
    if(cuboB){
       glPushMatrix();
       glTranslatef(30,20,-40);
       glScalef(40,40,40);
-      cubo->draw(puntos,lineas,solido,ajedrez,modo_dibujado);
+      cubo->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
       glPopMatrix();
    }
 
@@ -112,7 +135,7 @@ void Escena::dibujar()
       glPushMatrix();
       glTranslatef(-45,0,-45);
       glScalef(40,40,40);
-      tetraedro->draw(puntos,lineas,solido,ajedrez,modo_dibujado);
+      tetraedro->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
       glPopMatrix();
    }
 
@@ -120,17 +143,7 @@ void Escena::dibujar()
       glPushMatrix();
       glTranslatef(25,10,45);
       glScalef(1.5,1.5,1.5);
-      objeto_ply->draw(puntos,lineas,solido,ajedrez,modo_dibujado);
-      glPopMatrix();
-   }
-
-   if(lataB){
-      glPushMatrix();
-      glTranslatef(-40,0,40);
-      glScalef(20,20,20);
-      lata_superior->draw(puntos,lineas,solido,ajedrez,modo_dibujado,tapas);
-      lata_cuerpo->draw(puntos,lineas,solido,ajedrez,modo_dibujado,tapas);
-      lata_inferior->draw(puntos,lineas,solido,ajedrez,modo_dibujado,tapas);
+      objeto_ply->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
       glPopMatrix();
    }
 
@@ -138,7 +151,7 @@ void Escena::dibujar()
       glPushMatrix();
       glTranslatef(80,20,40);
       glScalef(20,20,20);
-      esfera->draw(puntos,lineas,solido,ajedrez,modo_dibujado,tapas);
+      esfera->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
       glPopMatrix();
    }
 
@@ -146,7 +159,7 @@ void Escena::dibujar()
       glPushMatrix();
       glTranslatef(-80,20,40);
       glScalef(40,40,40);
-      cono->draw(puntos,lineas,solido,ajedrez,modo_dibujado,tapas);
+      cono->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
       glPopMatrix();
    }
 
@@ -154,7 +167,7 @@ void Escena::dibujar()
       glPushMatrix();
       glTranslatef(90,20,-40);
       glScalef(20,20,20);
-      cilindro->draw(puntos,lineas,solido,ajedrez,modo_dibujado,tapas);
+      cilindro->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
       glPopMatrix();
    }
 
@@ -162,15 +175,21 @@ void Escena::dibujar()
       glPushMatrix();
       glTranslatef(0,0,100);
       glScalef(20,20,20);
-      peon->draw(puntos,lineas,solido,ajedrez,modo_dibujado,tapas);
+      peon->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
       glPopMatrix();
    }
 
    if(semiesferaB){
       glPushMatrix();
+         glTranslatef(-150,0,-40);
          glScalef(40,40,40);
-         semiesfera->draw(puntos,lineas,solido,ajedrez,modo_dibujado,tapas);
+         semiesfera->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
       glPopMatrix();
+   }
+
+   if(smooth || flat){
+      glDisable(GL_LIGHTING);
+      glDisable(GL_NORMALIZE);
    }
     
 }
@@ -200,6 +219,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Selección de Objeto: O\n";
             cout << "Modo de Visualización: V\n";
             cout << "Modo de Dibujado: D\n";
+            cout << "Opciones de Iluminación: I\n";
             cout << "Salir: Q\n";
          }          
          else {
@@ -214,7 +234,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          cout << "Activar/Desactivar Cubo: C\n";
          cout << "Activar/Desactivar Tetraedro: T\n";
          cout << "Activar/Desactivar Hormiga: H\n";
-         cout << "Activar/Desactivar Lata: L\n";
          cout << "Activar/Desactivar Esfera: E\n";
          cout << "Activar/Desactivar Cilindro: G\n";
          cout << "Activar/Desactivar Cono: K\n";
@@ -258,7 +277,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar Tetraedro: T\n";
             cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Esfera: E\n";
             cout << "Activar/Desactivar Cilindro: G\n";
             cout << "Activar/Desactivar Cono: K\n";
@@ -285,7 +303,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar Tetraedro: T\n";
             cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Esfera: E\n";
             cout << "Activar/Desactivar Cilindro: G\n";
             cout << "Activar/Desactivar Cono: K\n";
@@ -311,9 +328,27 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Tapas (Objetos de Revolución): T\n";
             cout << "Volver al menú principal: Q\n";
          }
-            else{
-               cout << "Opción inválida\n";
+
+         else if(modoMenu==SELILUMINACION){
+            if(!smooth){
+               cout << "Se ha activado la iluminación suavizada\n";
+               smooth = true;
+               flat = false;
             }
+            else{
+               cout << "Se ha activado la iluminación plana\n";
+               smooth = false;
+               flat = true;
+            }
+
+            cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
+            cout << "Activar/Desactivar Iluminación: A\n";
+            cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
+         }
+
+         else{
+               cout << "Opción inválida\n";
+         }
       break;
 
       case 'P' :
@@ -321,9 +356,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             if(!puntos){
                cout << "Se ha activado la visualización de puntos\n";
                puntos = true;
-               if(ajedrez){
-                  ajedrez = false;
-               }
+               ajedrez = false;
+               smooth = false;
+               flat = false;
             }
             else{
                cout << "Se ha desactivado la visualización de puntos\n";
@@ -353,7 +388,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                cout << "Activar/Desactivar Cubo: C\n";
                cout << "Activar/Desactivar Tetraedro: T\n";
                cout << "Activar/Desactivar Hormiga: H\n";
-               cout << "Activar/Desactivar Lata: L\n";
                cout << "Activar/Desactivar Esfera: E\n";
                cout << "Activar/Desactivar Cilindro: G\n";
                cout << "Activar/Desactivar Cono: K\n";
@@ -370,9 +404,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             if(!lineas){
                cout << "Se ha activado la visualización de líneas\n";
                lineas = true;
-               if(ajedrez){
-                  ajedrez = false;
-               }
+               ajedrez = false;
+               smooth = false;
+               flat = false;
             }
             else{
                cout << "Se ha desactivado la visualización de líneas\n";
@@ -387,28 +421,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Tapas (Objetos de Revolución): T\n";
             cout << "Volver al menú principal: Q\n";
          }
-
-         else if(modoMenu==SELOBJETO){
-               if(!lataB){
-                  cout << "Se ha activado la Lata\n";
-                  lataB = true;
-               }
-               else{
-                  cout << "Se ha desactivado la Lata\n";
-                  lataB = false;
-               }
-
-               cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
-               cout << "Activar/Desactivar Cubo: C\n";
-               cout << "Activar/Desactivar Tetraedro: T\n";
-               cout << "Activar/Desactivar Hormiga: H\n";
-               cout << "Activar/Desactivar Lata: L\n";
-               cout << "Activar/Desactivar Esfera: E\n";
-               cout << "Activar/Desactivar Cilindro: G\n";
-               cout << "Activar/Desactivar Cono: K\n";
-               cout << "Activar/Desactivar Peon: P\n";
-               cout << "Volver al menú principal: Q\n";
-            }
          else{
             cout << "Opción inválida\n";
          }
@@ -419,9 +431,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             if(!solido){
                cout << "Se ha activado la visualización de sólidos\n";
                solido = true;
-               if(ajedrez){
-                  ajedrez = false;
-               }
+               ajedrez = false;
+               smooth = false;
+               flat = false;
             }
             else{
                cout << "Se ha desactivado la visualización de sólidos\n";
@@ -449,6 +461,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                puntos = false;
                lineas = false;
                solido = false;
+               smooth = false;
+               flat = false;
             }
             else{
                cout << "Se ha desactivado la visualización en modo ajedrez y vuelto a la visualización de sólidos\n";
@@ -464,6 +478,30 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Tapas (Objetos de Revolución): T\n";
             cout << "Volver al menú principal: Q\n";
          }
+
+         else if(modoMenu==SELILUMINACION){
+            if(!flat && !smooth){
+               cout << "Se ha activado la Iluminación\n";
+               smooth = true;
+               flat = false;
+               ajedrez = false;
+               puntos = false;
+               lineas = false;
+               solido = false;
+            }
+
+            else{
+               cout << "Se ha desactivado la Iluminación\n";
+               smooth = false;
+               flat = false;
+               solido = true;
+            }
+
+            cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
+            cout << "Activar/Desactivar Iluminación: A\n";
+            cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
+         }
+
          else{
             cout << "Opción inválida\n";
          }
@@ -514,7 +552,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar Tetraedro: T\n";
             cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Esfera: E\n";
             cout << "Activar/Desactivar Cilindro: G\n";
             cout << "Activar/Desactivar Cono: K\n";
@@ -541,7 +578,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar Tetraedro: T\n";
             cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Esfera: E\n";
             cout << "Activar/Desactivar Cilindro: G\n";
             cout << "Activar/Desactivar Cono: K\n";
@@ -568,7 +604,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar Tetraedro: T\n";
             cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Esfera: E\n";
             cout << "Activar/Desactivar Cilindro: G\n";
             cout << "Activar/Desactivar Cono: K\n";
@@ -595,7 +630,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar Tetraedro: T\n";
             cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Esfera: E\n";
             cout << "Activar/Desactivar Cilindro: G\n";
             cout << "Activar/Desactivar Cono: K\n";
@@ -605,6 +639,13 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else{
             cout << "Opción inválida\n";
          }
+      break;
+
+      case 'I':
+         modoMenu = SELILUMINACION;
+         cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
+         cout << "Activar/Desactivar Iluminación: A\n";
+         cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
       break;
 
       default :

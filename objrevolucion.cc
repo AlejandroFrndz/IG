@@ -73,7 +73,7 @@ void ObjRevolucion::extraerTapas(std::vector<Tupla3f> &perfil, short eje){
    {
       case 1:
          //Rotar en y
-         if(perfil[0](0) == 0){
+         if(fabs(perfil[0](0)) < std::numeric_limits<double>::epsilon()){
             poloSur = perfil[0];
             perfil.erase(perfil.begin());
          }
@@ -83,7 +83,7 @@ void ObjRevolucion::extraerTapas(std::vector<Tupla3f> &perfil, short eje){
             poloSur(2) = 0;
          }
 
-         if(perfil[perfil.size()-1](0) == 0){
+         if(fabs(perfil[perfil.size()-1](0)) < std::numeric_limits<double>::epsilon()){
             poloNorte = perfil[perfil.size()];
             perfil.pop_back();
          }
@@ -96,7 +96,7 @@ void ObjRevolucion::extraerTapas(std::vector<Tupla3f> &perfil, short eje){
 
       case 0:
          //Rotar en x
-         if(perfil[0](1) == 0){
+         if(fabs(perfil[0](1)) < std::numeric_limits<double>::epsilon()){
             poloSur = perfil[0];
             perfil.erase(perfil.begin());
          }
@@ -106,7 +106,7 @@ void ObjRevolucion::extraerTapas(std::vector<Tupla3f> &perfil, short eje){
             poloSur(2) = 0;
          }
 
-         if(perfil[perfil.size()-1](1) == 0){
+         if(fabs(perfil[perfil.size()-1](1)) < std::numeric_limits<double>::epsilon()){
             poloNorte = perfil[perfil.size()];
             perfil.pop_back();
          }
@@ -119,7 +119,7 @@ void ObjRevolucion::extraerTapas(std::vector<Tupla3f> &perfil, short eje){
 
       case 2:
          //Rotar en z
-         if(perfil[0](0) == 0){
+         if(fabs(perfil[0](0)) < std::numeric_limits<double>::epsilon()){
             poloSur = perfil[0];
             perfil.erase(perfil.begin());
          }
@@ -129,7 +129,7 @@ void ObjRevolucion::extraerTapas(std::vector<Tupla3f> &perfil, short eje){
             poloSur(2) = perfil[0](2);
          }
 
-         if(perfil[perfil.size()-1](0) == 0){
+         if(fabs(perfil[perfil.size()-1](0)) < std::numeric_limits<double>::epsilon()){
             poloNorte = perfil[perfil.size()];
             perfil.pop_back();
          }
@@ -372,8 +372,13 @@ void ObjRevolucion::crearTapas(const std::vector<Tupla3f> &perfil, int num_insta
    }
 }
 
-void ObjRevolucion::draw(bool puntos, bool alambre, bool solido, bool ajedrez, dibujado modo_dibujado, bool tapas)
+void ObjRevolucion::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smooth, bool flat, dibujado modo_dibujado, bool tapas)
 {
+
+   if(nv.empty()){
+      calcular_normales();
+   }
+
    if(puntos){
       glPointSize(3);
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
@@ -459,6 +464,52 @@ void ObjRevolucion::draw(bool puntos, bool alambre, bool solido, bool ajedrez, d
       }
    }
 
+   if(smooth){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      glShadeModel(GL_SMOOTH);
+      m.aplicar();
+
+      if(modo_dibujado == INMEDIATO){
+         if(!tapas){
+            this->draw_Inmediato_NTapas(LUZ);
+         }
+         else{
+            this->draw_ModoInmediato(LUZ);
+         }
+      }
+      else{
+         if(!tapas){
+            this->draw_Diferido_NTapas(LUZ);
+         }
+         else{
+            this->draw_ModoDiferido(LUZ);
+         }
+      }
+   }
+
+   if(flat){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      glShadeModel(GL_FLAT);
+      m.aplicar();
+
+      if(modo_dibujado == INMEDIATO){
+         if(!tapas){
+            this->draw_Inmediato_NTapas(LUZ);
+         }
+         else{
+            this->draw_ModoInmediato(LUZ);
+         }
+      }
+      else{
+         if(!tapas){
+            this->draw_Diferido_NTapas(LUZ);
+         }
+         else{
+            this->draw_ModoDiferido(LUZ);
+         }
+      }
+   }
+
 }
 
 void ObjRevolucion::draw_Inmediato_NTapas(visualizacion modo_visualizacion)
@@ -466,24 +517,34 @@ void ObjRevolucion::draw_Inmediato_NTapas(visualizacion modo_visualizacion)
   // visualizar la malla usando glDrawElements,
    glEnableClientState(GL_VERTEX_ARRAY);
    glVertexPointer(3, GL_FLOAT, 0 , v.data());
-   glEnableClientState(GL_COLOR_ARRAY);
+
    switch (modo_visualizacion)
    {
    case PUNTOS:
+      glEnableClientState(GL_COLOR_ARRAY);
       glColorPointer(3, GL_FLOAT, 0, c_puntos.data());
    break;
    
    case ALAMBRE:
+      glEnableClientState(GL_COLOR_ARRAY);
       glColorPointer(3, GL_FLOAT, 0, c_lineas.data());
    break;
 
    case SOLIDO:
+      glEnableClientState(GL_COLOR_ARRAY);
       glColorPointer(3, GL_FLOAT, 0, c_solido.data());
    break;
+
+   case LUZ:
+      glEnableClientState(GL_NORMAL_ARRAY);
+      glNormalPointer(GL_FLOAT,0,nv.data());
+   break;
    }
+
    glDrawElements(GL_TRIANGLES, 3*ntapas_f, GL_UNSIGNED_INT, f.data());
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
+   glDisableClientState(GL_NORMAL_ARRAY);
 }
 
 void ObjRevolucion::draw_Diferido_NTapas(visualizacion modo_visualizacion){
@@ -498,24 +559,38 @@ void ObjRevolucion::draw_Diferido_NTapas(visualizacion modo_visualizacion){
       if(VBO_c_puntos == 0)
          VBO_c_puntos = CrearVBO(GL_ARRAY_BUFFER, 3*c_puntos.size()*sizeof(float), c_puntos.data());
       glBindBuffer(GL_ARRAY_BUFFER, VBO_c_puntos);
+      glColorPointer(3, GL_FLOAT,0,0);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glEnableClientState(GL_COLOR_ARRAY);
    break;
 
    case ALAMBRE:
       if(VBO_c_lineas == 0)
          VBO_c_lineas = CrearVBO(GL_ARRAY_BUFFER, 3*c_lineas.size()*sizeof(float), c_lineas.data());
       glBindBuffer(GL_ARRAY_BUFFER, VBO_c_lineas);
+      glColorPointer(3, GL_FLOAT,0,0);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glEnableClientState(GL_COLOR_ARRAY);
    break;
 
    case SOLIDO:
       if(VBO_c_solido == 0)
          VBO_c_solido = CrearVBO(GL_ARRAY_BUFFER, 3*c_solido.size()*sizeof(float), c_solido.data());
       glBindBuffer(GL_ARRAY_BUFFER, VBO_c_solido);
+      glColorPointer(3, GL_FLOAT,0,0);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glEnableClientState(GL_COLOR_ARRAY);
+   break;
+
+   case LUZ:
+      if(VBO_nv == 0)
+         VBO_nv = CrearVBO(GL_ARRAY_BUFFER, 3*nv.size()*sizeof(float), nv.data());
+      glBindBuffer(GL_ARRAY_BUFFER,VBO_nv);
+      glNormalPointer(GL_FLOAT,0,0);
+      glBindBuffer(GL_ARRAY_BUFFER,0);
+      glEnableClientState(GL_NORMAL_ARRAY);
    break;
    }
-
-   glColorPointer(3, GL_FLOAT,0,0);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-   glEnableClientState(GL_COLOR_ARRAY);
 
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_f);
    glDrawElements(GL_TRIANGLES, 3*ntapas_f, GL_UNSIGNED_INT, 0);
@@ -523,6 +598,7 @@ void ObjRevolucion::draw_Diferido_NTapas(visualizacion modo_visualizacion){
 
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
+   glDisableClientState(GL_NORMAL_ARRAY);
 }
 
 void ObjRevolucion::draw_Ajedrez_Diferido_NTapas(){
