@@ -34,7 +34,7 @@ class ObjRevolucion : public Malla3D
 
     protected:
         Tupla3f poloNorte, poloSur;
-        int ntapas_f;
+        int ntapas_f, ntapas_f_par = 0, ntapas_f_impar = 0;
         void crearMalla(const std::vector<Tupla3f> &perfil_original, int num_instancias, bool tapa_sup, bool tapa_inf, short eje);
         void extraerTapas(std::vector<Tupla3f> &perfil, short eje);
         void crearVertices(const std::vector<Tupla3f> &perfil, int num_instancias, short eje);
@@ -44,11 +44,6 @@ class ObjRevolucion : public Malla3D
         void draw_Inmediato_NTapas(visualizacion modo_visualizacion);
         void draw_Ajedrez_Diferido_NTapas();
         void draw_Ajedrez_Inmediato_NTapas();
-
-        std::vector<Tupla3i> f_pares_ntapas, f_impares_ntapas;
-        GLuint VBO_f_pares_ntapas = 0, VBO_f_impares_ntapas = 0;
-
-
 } ;
 
 

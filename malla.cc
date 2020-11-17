@@ -116,7 +116,7 @@ void Malla3D::draw_Ajedrez_Inmediato(){
    glEnableClientState(GL_COLOR_ARRAY);
    glVertexPointer(3, GL_FLOAT, 0, v.data());
 
-   if(f_pares.size() <= 0){
+   if(f_pares.empty()){
       for(int i = 0; i < f.size(); i+=2){
          f_pares.push_back(f[i]);
          f_impares.push_back(f[i+1]);
@@ -139,7 +139,7 @@ void Malla3D::draw_Ajedrez_Inmediato(){
 
 void Malla3D::draw_Ajedrez_Diferido(){
 
-   if(f_pares.size() <= 0){
+   if(f_pares.empty()){
       for(int i = 0; i < f.size(); i+=2){
          f_pares.push_back(f[i]);
          f_impares.push_back(f[i+1]);

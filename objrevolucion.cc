@@ -526,13 +526,27 @@ void ObjRevolucion::draw_Diferido_NTapas(visualizacion modo_visualizacion){
 }
 
 void ObjRevolucion::draw_Ajedrez_Diferido_NTapas(){
-   for(int i = 0; i < ntapas_f; i+=2){
-      f_pares_ntapas.push_back(f[i]);
-      f_impares_ntapas.push_back(f[i+1]);
+
+   if(f_pares.empty()){
+      for(int i = 0; i < f.size(); i+=2){
+         f_pares.push_back(f[i]);
+         f_impares.push_back(f[i+1]);
+      }
+
+      if((f.size() % 2) != 0){
+         f_pares.push_back(f[f.size()-1]);
+      }
    }
 
-   if((ntapas_f % 2) != 0){
-      f_pares_ntapas.push_back(f[f.size()-1]);
+   if(ntapas_f_par == 0 || ntapas_f_impar == 0){
+      for(int i = 0; i < ntapas_f; i+=2){
+         ntapas_f_par++;
+         ntapas_f_impar++;
+      }
+
+      if((ntapas_f % 2) != 0){
+         ntapas_f_par++;
+      }
    }
 
    if(VBO_v == 0){
@@ -555,12 +569,12 @@ void ObjRevolucion::draw_Ajedrez_Diferido_NTapas(){
    glColorPointer(3, GL_FLOAT, 0, 0);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-   if(VBO_f_pares_ntapas == 0){
-      VBO_f_pares_ntapas = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*f_pares_ntapas.size()*sizeof(int), f_pares_ntapas.data());
+   if(VBO_f_pares == 0){
+      VBO_f_pares = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*f_pares.size()*sizeof(int), f_pares.data());
    }
 
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_f_pares_ntapas);
-   glDrawElements(GL_TRIANGLES, 3*f_pares_ntapas.size(), GL_UNSIGNED_INT, 0);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_f_pares);
+   glDrawElements(GL_TRIANGLES, 3*ntapas_f_par, GL_UNSIGNED_INT, 0);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
    //Caras impares
@@ -572,12 +586,12 @@ void ObjRevolucion::draw_Ajedrez_Diferido_NTapas(){
    glColorPointer(3, GL_FLOAT, 0, 0);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-   if(VBO_f_impares_ntapas == 0){
-      VBO_f_impares_ntapas = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*f_impares_ntapas.size()*sizeof(int), f_impares_ntapas.data());
+   if(VBO_f_impares == 0){
+      VBO_f_impares = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*f_impares.size()*sizeof(int), f_impares.data());
    }
 
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_f_impares_ntapas);
-   glDrawElements(GL_TRIANGLES, 3*f_impares_ntapas.size(), GL_UNSIGNED_INT, 0);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_f_impares);
+   glDrawElements(GL_TRIANGLES, 3*ntapas_f_impar, GL_UNSIGNED_INT, 0);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
    glDisableClientState(GL_VERTEX_ARRAY);
@@ -590,22 +604,33 @@ void ObjRevolucion::draw_Ajedrez_Inmediato_NTapas(){
    glShadeModel(GL_FLAT);
    glVertexPointer(3, GL_FLOAT, 0, v.data());
 
-   if(f_pares_ntapas.size() <= 0){
+   if(f_pares.empty()){
+      for(int i = 0; i < f.size(); i+=2){
+         f_pares.push_back(f[i]);
+         f_impares.push_back(f[i+1]);
+      }
+
+      if((f.size() % 2) != 0){
+         f_pares.push_back(f[f.size()-1]);
+      }
+   }
+
+   if(ntapas_f_par == 0 || ntapas_f_impar == 0){
       for(int i = 0; i < ntapas_f; i+=2){
-         f_pares_ntapas.push_back(f[i]);
-         f_impares_ntapas.push_back(f[i+1]);
+         ntapas_f_par++;
+         ntapas_f_impar++;
       }
 
       if((ntapas_f % 2) != 0){
-         f_pares_ntapas.push_back(f[f.size()-1]);
+         ntapas_f_par++;
       }
    }
 
    glColorPointer(3,GL_FLOAT,0,c_pares.data());
-   glDrawElements(GL_TRIANGLES, 3*f_pares_ntapas.size(), GL_UNSIGNED_INT, f_pares_ntapas.data());
+   glDrawElements(GL_TRIANGLES, 3*ntapas_f_par, GL_UNSIGNED_INT, f_pares.data());
 
    glColorPointer(3,GL_FLOAT,0,c_impares.data());
-   glDrawElements(GL_TRIANGLES, 3*f_impares_ntapas.size(), GL_UNSIGNED_INT, f_impares_ntapas.data());
+   glDrawElements(GL_TRIANGLES, 3*ntapas_f_impar, GL_UNSIGNED_INT, f_impares.data());
 
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
