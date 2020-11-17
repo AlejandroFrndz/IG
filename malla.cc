@@ -114,16 +114,17 @@ GLuint Malla3D::CrearVBO(GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero
 void Malla3D::draw_Ajedrez_Inmediato(){
    glEnableClientState(GL_VERTEX_ARRAY);
    glEnableClientState(GL_COLOR_ARRAY);
-   glShadeModel(GL_FLAT);
    glVertexPointer(3, GL_FLOAT, 0, v.data());
 
-   for(int i = 0; i < f.size(); i+=2){
-      f_pares.push_back(f[i]);
-      f_impares.push_back(f[i+1]);
-   }
+   if(f_pares.size() <= 0){
+      for(int i = 0; i < f.size(); i+=2){
+         f_pares.push_back(f[i]);
+         f_impares.push_back(f[i+1]);
+      }
 
-   if((f.size() % 2) != 0){
-      f_pares.push_back(f[f.size()-1]);
+      if((f.size() % 2) != 0){
+         f_pares.push_back(f[f.size()-1]);
+      }
    }
 
    glColorPointer(3,GL_FLOAT,0,c_pares.data());
@@ -137,13 +138,16 @@ void Malla3D::draw_Ajedrez_Inmediato(){
 }
 
 void Malla3D::draw_Ajedrez_Diferido(){
-   for(int i = 0; i < f.size(); i+=2){
-      f_pares.push_back(f[i]);
-      f_impares.push_back(f[i+1]);
-   }
 
-   if((f.size() % 2) != 0){
-      f_pares.push_back(f[f.size()-1]);
+   if(f_pares.size() <= 0){
+      for(int i = 0; i < f.size(); i+=2){
+         f_pares.push_back(f[i]);
+         f_impares.push_back(f[i+1]);
+      }
+
+      if((f.size() % 2) != 0){
+         f_pares.push_back(f[f.size()-1]);
+      }
    }
 
    if(VBO_v == 0){

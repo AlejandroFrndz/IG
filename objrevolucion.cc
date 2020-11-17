@@ -63,8 +63,7 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> &perfil_original, int 
 
    crearVertices(perfil,num_instancias,eje);
    crearCaras(perfil,num_instancias,eje);
-   v_ntapas = v;
-   f_ntapas = f;
+   ntapas_f = f.size();
    crearTapas(perfil,num_instancias,tapa_sup,tapa_inf,eje);
 
 }
@@ -466,7 +465,7 @@ void ObjRevolucion::draw_Inmediato_NTapas(visualizacion modo_visualizacion)
 {
   // visualizar la malla usando glDrawElements,
    glEnableClientState(GL_VERTEX_ARRAY);
-   glVertexPointer(3, GL_FLOAT, 0 , v_ntapas.data());
+   glVertexPointer(3, GL_FLOAT, 0 , v.data());
    glEnableClientState(GL_COLOR_ARRAY);
    switch (modo_visualizacion)
    {
@@ -482,21 +481,13 @@ void ObjRevolucion::draw_Inmediato_NTapas(visualizacion modo_visualizacion)
       glColorPointer(3, GL_FLOAT, 0, c_solido.data());
    break;
    }
-   glDrawElements(GL_TRIANGLES, 3*f_ntapas.size(), GL_UNSIGNED_INT, f_ntapas.data());
+   glDrawElements(GL_TRIANGLES, 3*ntapas_f, GL_UNSIGNED_INT, f.data());
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
 }
 
 void ObjRevolucion::draw_Diferido_NTapas(visualizacion modo_visualizacion){
-   if(VBO_v_ntapas == 0){
-      VBO_v_ntapas = CrearVBO(GL_ARRAY_BUFFER, 3*v_ntapas.size()*sizeof(float), v_ntapas.data());
-   }
-
-   if(VBO_f_ntapas == 0){
-      VBO_f_ntapas = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*f_ntapas.size()*sizeof(int), f_ntapas.data());
-   }
-
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_v_ntapas);
+   glBindBuffer(GL_ARRAY_BUFFER, VBO_v);
    glVertexPointer(3, GL_FLOAT, 0, 0);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glEnableClientState(GL_VERTEX_ARRAY);
@@ -526,8 +517,8 @@ void ObjRevolucion::draw_Diferido_NTapas(visualizacion modo_visualizacion){
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glEnableClientState(GL_COLOR_ARRAY);
 
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_f_ntapas);
-   glDrawElements(GL_TRIANGLES, 3*f_ntapas.size(), GL_UNSIGNED_INT, 0);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_f);
+   glDrawElements(GL_TRIANGLES, 3*ntapas_f, GL_UNSIGNED_INT, 0);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
    glDisableClientState(GL_VERTEX_ARRAY);
@@ -535,20 +526,20 @@ void ObjRevolucion::draw_Diferido_NTapas(visualizacion modo_visualizacion){
 }
 
 void ObjRevolucion::draw_Ajedrez_Diferido_NTapas(){
-   for(int i = 0; i < f_ntapas.size(); i+=2){
+   for(int i = 0; i < ntapas_f; i+=2){
       f_pares_ntapas.push_back(f[i]);
       f_impares_ntapas.push_back(f[i+1]);
    }
 
-   if((f_ntapas.size() % 2) != 0){
+   if((ntapas_f % 2) != 0){
       f_pares_ntapas.push_back(f[f.size()-1]);
    }
 
-   if(VBO_v_ntapas == 0){
-      VBO_v_ntapas = CrearVBO(GL_ARRAY_BUFFER, 3*v_ntapas.size()*sizeof(float), v_ntapas.data());
+   if(VBO_v == 0){
+      VBO_v = CrearVBO(GL_ARRAY_BUFFER, 3*v.size()*sizeof(float), v.data());
    }
 
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_v_ntapas);
+   glBindBuffer(GL_ARRAY_BUFFER, VBO_v);
    glVertexPointer(3, GL_FLOAT, 0, 0);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glEnableClientState(GL_VERTEX_ARRAY);
@@ -597,15 +588,17 @@ void ObjRevolucion::draw_Ajedrez_Inmediato_NTapas(){
    glEnableClientState(GL_VERTEX_ARRAY);
    glEnableClientState(GL_COLOR_ARRAY);
    glShadeModel(GL_FLAT);
-   glVertexPointer(3, GL_FLOAT, 0, v_ntapas.data());
+   glVertexPointer(3, GL_FLOAT, 0, v.data());
 
-   for(int i = 0; i < f_ntapas.size(); i+=2){
-      f_pares_ntapas.push_back(f[i]);
-      f_impares_ntapas.push_back(f[i+1]);
-   }
+   if(f_pares_ntapas.size() <= 0){
+      for(int i = 0; i < ntapas_f; i+=2){
+         f_pares_ntapas.push_back(f[i]);
+         f_impares_ntapas.push_back(f[i+1]);
+      }
 
-   if((f_ntapas.size() % 2) != 0){
-      f_pares_ntapas.push_back(f[f.size()-1]);
+      if((ntapas_f % 2) != 0){
+         f_pares_ntapas.push_back(f[f.size()-1]);
+      }
    }
 
    glColorPointer(3,GL_FLOAT,0,c_pares.data());

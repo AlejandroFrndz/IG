@@ -51,7 +51,7 @@ class Malla3D
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
 
    std::vector<Tupla3f> v;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
-   std::vector<Tupla3i> f, f_pares, f_impares, f_pares_ntapas, f_impares_ntapas; // una terna de 3 enteros por cada cara o triángulo
+   std::vector<Tupla3i> f, f_pares, f_impares; // una terna de 3 enteros por cada cara o triángulo
    std::vector<Tupla3f> c_puntos, c_lineas, c_solido, c_pares, c_impares; //Tabla de colores, con 3 floats por color RGB
 
    GLuint VBO_v = 0, VBO_f = 0, VBO_f_pares = 0, VBO_f_impares = 0, VBO_c_puntos = 0, VBO_c_lineas = 0, VBO_c_solido = 0, VBO_c_pares = 0, VBO_c_impares = 0; //VBOs para el modo diferido
