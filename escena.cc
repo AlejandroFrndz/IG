@@ -126,7 +126,7 @@ void Escena::dibujar()
 
       if(luz1B){
          glPushMatrix();
-            //glLoadIdentity();
+            glLoadIdentity();
             luz1->activar();
          glPopMatrix();
       }
@@ -226,6 +226,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    {
       case 'Q' :
          if (modoMenu!=NADA){
+            varA = false;
+            varB = false;
             modoMenu=NADA;  
             cout << "\n-------OPCIONES DEL MENÚ-------\n";
             cout << "Selección de Objeto: O\n";
@@ -558,7 +560,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
       case 'B':
          if(modoMenu==SELILUMINACION){
-            if(!varA){
+            if(!varB){
                cout << "Se ha seleccionado la variación del ángulo beta\n";
                varB = true;
                varA = false;
@@ -761,7 +763,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
       case '>':
          if(varA){
-            cout << "Ángulo alpha actual: " << luz1->variarAnguloAlpha(40) << endl;
+            cout << "Ángulo alpha actual: " << luz1->variarAnguloAlpha(20) << endl;
          }
          else if(varB){
             cout << "Ángulo beta actual: " << luz1->variarAnguloBeta(20) << endl;
@@ -774,7 +776,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
       case '<':
          if(varA){
-            cout << "Ángulo alpha actual: " << luz1->variarAnguloAlpha(-40) << endl;
+            cout << "Ángulo alpha actual: " << luz1->variarAnguloAlpha(-20) << endl;
          }
          else if(varB){
             cout << "Ángulo beta actual: " << luz1->variarAnguloBeta(-20) << endl;
