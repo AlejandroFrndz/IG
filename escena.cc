@@ -25,38 +25,14 @@ Escena::Escena()
 }
 
 void Escena::crear_objetos(){
-   //Cubo
-   cubo = new Cubo(1.0);
-   cubo->establecer_colores();
-   cubo->setMaterial(obsidiana);
-   //Tetraedro
-   tetraedro = new Tetraedro();
-   tetraedro->establecer_colores();
-   tetraedro->setMaterial(esmeralda);
-   //Objeto PLY
-   objeto_ply = new ObjPLY("./plys/ant.ply");
-   objeto_ply->establecer_colores();
-   objeto_ply->setMaterial(plata);
-   //Peon
-   peon = new ObjRevolucion("./plys/reverse_peon-z.ply",25,true,true,2);
-   peon->establecer_colores();
-   peon->setMaterial(plastico_verde);
-   //Cilindro
-   cilindro = new Cilindro(5,25,2,1);
-   cilindro->establecer_colores();
-   cilindro->setMaterial(bronce);
-   //Cono
-   cono = new Cono(10,25,1,0.5);
-   cono->establecer_colores();
-   cono->setMaterial(oro);
-   //Esfera
-   esfera = new Esfera(20,35,1);
-   esfera->establecer_colores();
-   esfera->setMaterial(goma_amarilla);
-   //Semiesfera
-   semiesfera = new Semiesfera(20,35,1);
-   semiesfera->establecer_colores();
-   semiesfera->setMaterial(esmeralda);
+
+  cabeza = new Cabeza();
+  cabeza->setColorDetalle();
+  cabeza->setColorLentes();
+  cabeza->setColorMetal();
+  cabeza->setMaterialDetalle(esmeralda);
+  cabeza->setMaterialLentes(obsidiana);
+  cabeza->setMaterialMetal(plata);
 
    //LuzPosicional
    luz0 = new LuzPosicional({0.0,0.0,0.0},GL_LIGHT0,{0.5,0.5,0.5,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
@@ -132,70 +108,7 @@ void Escena::dibujar()
       }
    }
 
-   //Selección del objeto activo
-   if(cuboB){
-      glPushMatrix();
-      glTranslatef(30,20,-40);
-      glScalef(40,40,40);
-      cubo->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
-      glPopMatrix();
-   }
-
-   if(tetraedroB){
-      glPushMatrix();
-      glTranslatef(-45,0,-45);
-      glScalef(40,40,40);
-      tetraedro->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
-      glPopMatrix();
-   }
-
-   if(objetoPLYB){
-      glPushMatrix();
-      glTranslatef(25,10,45);
-      glScalef(1.5,1.5,1.5);
-      objeto_ply->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
-      glPopMatrix();
-   }
-
-   if(esferaB){
-      glPushMatrix();
-      glTranslatef(80,20,40);
-      glScalef(20,20,20);
-      esfera->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
-      glPopMatrix();
-   }
-
-   if(conoB){
-      glPushMatrix();
-      glTranslatef(-80,20,40);
-      glScalef(40,40,40);
-      cono->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
-      glPopMatrix();
-   }
-
-   if(cilindroB){
-      glPushMatrix();
-      glTranslatef(90,20,-40);
-      glScalef(20,20,20);
-      cilindro->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
-      glPopMatrix();
-   }
-
-   if(peonB){
-      glPushMatrix();
-      glTranslatef(0,0,100);
-      glScalef(20,20,20);
-      peon->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
-      glPopMatrix();
-   }
-
-   if(semiesferaB){
-      glPushMatrix();
-         glTranslatef(-150,0,-40);
-         glScalef(40,40,40);
-         semiesfera->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
-      glPopMatrix();
-   }
+   cabeza->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
 
    if(smooth || flat){
       glDisable(GL_LIGHTING);

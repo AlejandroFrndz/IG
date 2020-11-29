@@ -8,13 +8,13 @@
 // *****************************************************************************
 
 //Función para crear las tablas de colores de los elementos
-void Malla3D::establecer_colores(){
-   Tupla3f azul(0.0,0.0,1.0), rojo(1.0,0.0,0.0), verde(0,1.0,0.0), naranja(1.0,0.5490,0.0);
+void Malla3D::establecer_colores(float R, float G, float B){
+   Tupla3f azul(0.0,0.0,1.0), rojo(1.0,0.0,0.0), verde(0,1.0,0.0), solido(R,G,B);
 
    for(int i = 0; i < v.size(); i++){
       c_puntos.push_back(azul);
       c_lineas.push_back(verde);
-      c_solido.push_back(naranja);
+      c_solido.push_back(solido);
       c_pares.push_back(rojo);
       c_impares.push_back(verde);
    }

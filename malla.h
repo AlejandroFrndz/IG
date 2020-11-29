@@ -45,7 +45,7 @@ class Malla3D
    void draw_Ajedrez_Diferido();
 
    //Función para crear las tablas de colores de los objetos
-   void establecer_colores();
+   void establecer_colores(float R = 1.0, float G = 0.5490, float B = 0.0);
 
    //Función para establecer el material de la malla
    void setMaterial(Material mat);

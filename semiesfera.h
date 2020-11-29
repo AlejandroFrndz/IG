@@ -2,8 +2,7 @@
 //
 // Informática Gráfica (Grado Informática)
 //
-// Archivo: Semiesfera.h
-
+// Archivo: semiesfera.h
 //
 // #############################################################################
 
