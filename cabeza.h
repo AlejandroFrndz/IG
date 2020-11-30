@@ -21,6 +21,7 @@ class Cabeza{
         Semiesfera * semiesfera_ojo = nullptr;
         Cubo * cubo_ojo = nullptr;
         float alpha = 0;
+        const float max_alpha = 45;
 
     public:
         Cabeza();
@@ -31,8 +32,8 @@ class Cabeza{
         void setMaterialDetalle(Material mat);
         void setMaterialLentes(Material mat);
         void setMaterialMetal(Material mat);
-        void animar(float incremento);
-        void animarPeriscopio(float incremento_alpha, float incremento_h);
+        bool animar(float v);
+        bool animarPeriscopio(float v_a, float v_h);
 };
 
 #endif

@@ -15,7 +15,7 @@
 #include "luzdireccional.h"
 #include "r2.h"
 
-typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO,SELILUMINACION} menu;
+typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO,SELILUMINACION,ANIMACION} menu;
 
 class Escena
 {
@@ -69,6 +69,8 @@ class Escena
     bool luz1B = true;
     bool varA = false;
     bool varB = false;
+    int gradoLibertad = -1;
+    bool animacionAutomatica = false;
 
     // Objetos de la escena
     Ejes ejes;
@@ -92,6 +94,15 @@ class Escena
     //R2
     R2 * r2 = nullptr;
 
+    //Variables para a velocidad de la animación
+    float v_Cabeza = 0.00004;
+    float v_Cuerpo = 0.00004;
+    float v_h_Periscopio = 0.00004;
+    float v_a_Periscopio = 0.00004;
+
+    const float max_speed = 0.00016;
+    const float min_speed = 0.00001;
+
     public:
 
     Escena();
@@ -104,6 +115,8 @@ class Escena
 	// Interacción con la escena
 	bool teclaPulsada( unsigned char Tecla1, int x, int y ) ;
 	void teclaEspecial( int Tecla1, int x, int y );
+
+    void animarModeloJerarquico();
 
 };
 #endif

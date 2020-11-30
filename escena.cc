@@ -75,6 +75,7 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
    std::cout << "Modo de Visualización: V\n";
    std::cout << "Modo de Dibujado: D\n";
    std::cout << "Opciones de Iluminación: I\n";
+   std::cout << "Animación Manual: M\n";
    std::cout << "Salir: Q\n";
 }
 
@@ -120,6 +121,27 @@ void Escena::dibujar()
     
 }
 
+//Función para la animación automática del modelo jerarquico
+void Escena::animarModeloJerarquico(){
+   if(animacionAutomatica){
+      if(!r2->animarCabeza(v_Cabeza)){
+         v_Cabeza *= -1;
+      }
+
+      if(!r2->animarCuerpo(v_Cuerpo)){
+         v_Cuerpo *= -1;
+      }
+
+      if(!r2->animarPeriscopio(v_a_Periscopio,0)){
+         v_a_Periscopio *= -1;
+      }
+
+      if(!r2->animarPeriscopio(0,v_h_Periscopio)){
+         v_h_Periscopio *= -1;
+      }
+   }
+}
+
 //**************************************************************************
 //
 // función que se invoca cuando se pulsa una tecla
@@ -148,6 +170,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Modo de Visualización: V\n";
             cout << "Modo de Dibujado: D\n";
             cout << "Opciones de Iluminación: I\n";
+            cout << "Animación Manual: M\n";
             cout << "Salir: Q\n";
          }          
          else {
@@ -467,6 +490,17 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Decrementar Ángulo: <\n";
          }
 
+         else if(modoMenu==ANIMACION){
+            if(!animacionAutomatica){
+               cout << "Se ha activado la animación automática\n";
+               animacionAutomatica = true;
+            }
+            else{
+               cout << "Se ha desactivado la animación automática\n";
+               animacionAutomatica = false;
+            }
+         }
+
          else{
             cout << "Opción inválida\n";
          }
@@ -511,6 +545,17 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             }
          }
 
+         else if(modoMenu==ANIMACION){
+            if(gradoLibertad != 0){
+               cout << "Se ha seleccionado el grado de libertad 0\n";
+               gradoLibertad = 0;
+            }
+            else{
+               cout << "Se ha deseleccionado el grado de libertad 0\n";
+               gradoLibertad = -1;
+            }
+         }
+
          else{
             cout << "Opción inválida\n";
          }
@@ -539,9 +584,21 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                varB = false;
             }
          }
+
+         else if(modoMenu==ANIMACION){
+            if(gradoLibertad != 1){
+               cout << "Se ha seleccionado el grado de libertad 1\n";
+               gradoLibertad = 1;
+            }
+            else{
+               cout << "Se ha deseleccionado el grado de libertad 1\n";
+               gradoLibertad = -1;
+            }
+         }
+
          else{
             cout << "Opción inválida\n";
-         } 
+         }
       break;
 
       case '2' :
@@ -554,9 +611,38 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar el dibujado en modo diferido con VBOs (por defecto): 2\n";
             cout << "Volver al menú principal: Q\n";
          }
+
+         else if(modoMenu==ANIMACION){
+            if(gradoLibertad != 2){
+               cout << "Se ha seleccionado el grado de libertad 2\n";
+               gradoLibertad = 2;
+            }
+            else{
+               cout << "Se ha deseleccionado el grado de libertad 2\n";
+               gradoLibertad = -1;
+            }
+         }
+
          else{
             cout << "Opción inválida\n";
          } 
+      break;
+
+      case '3':
+         if(modoMenu==ANIMACION){
+            if(gradoLibertad != 3){
+               cout << "Se ha seleccionado el grado de libertad 3\n";
+               gradoLibertad = 3;
+            }
+            else{
+               cout << "Se ha deseleccionado el grado de libertad 3\n";
+               gradoLibertad = -1;
+            }
+         }
+
+         else{
+            cout << "Opción inválida\n";
+         }
       break;
 
       case 'H' :
@@ -698,6 +784,192 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
          else{
             cout << "No se ha seleccionado ningún ángulo o la luz1 está desactivada\n";
+         }
+      break;
+
+      case '+':
+         if(modoMenu==ANIMACION){
+            if(!animacionAutomatica){
+               switch(gradoLibertad){
+                  case -1:
+                     cout << "No se ha seleccionado ningún grado de libertad\n";
+                  break;
+
+                  case 0:
+                     r2->animarPeriscopio(0,-0.01);
+                  break;
+
+                  case 1:
+                     r2->animarPeriscopio(0.01,0);
+                  break;
+
+                  case 2:
+                     r2->animarCabeza(0.01);
+                  break;
+
+                  case 3:
+                     r2->animarCuerpo(0.01);
+                  break;
+               }
+            }
+            else{
+               switch(gradoLibertad){
+                  case -1:
+                     if(v_Cuerpo < max_speed){
+                        v_Cuerpo *= 2;
+                     }
+
+                     if(v_Cabeza < max_speed){
+                        v_Cabeza *= 2;
+                     }
+
+                     if(v_a_Periscopio < max_speed){
+                        v_a_Periscopio *= 2;
+                     }
+
+                     if(v_h_Periscopio < max_speed){
+                        v_h_Periscopio *= 2;
+                     }
+                  break;
+
+                  case 0:
+                     if(v_h_Periscopio < max_speed){
+                        v_h_Periscopio *= 2;
+                     }
+                  break;
+
+                  case 1:
+                     if(v_a_Periscopio < max_speed){
+                        v_a_Periscopio *= 2;
+                     }
+                  break;
+
+                  case 2:
+                     if(v_Cabeza < max_speed){
+                        v_Cabeza *= 2;
+                     }
+                  break;
+
+                  case 3:
+                     if(v_Cuerpo < max_speed){
+                        v_Cuerpo *= 2;
+                     }
+                  break;
+               }
+            }
+         }
+         else{
+            cout << "Opción inválida\n";
+         }
+      break;
+
+      case '-':
+         if(modoMenu==ANIMACION){
+            if(!animacionAutomatica){
+               switch(gradoLibertad){
+                  case -1:
+                     cout << "No se ha seleccionado ningún grado de libertad\n";
+                  break;
+
+                  case 0:
+                     r2->animarPeriscopio(0,0.01);
+                  break;
+
+                  case 1:
+                     r2->animarPeriscopio(-0.01,0);
+                  break;
+
+                  case 2:
+                     r2->animarCabeza(-0.01);
+                  break;
+
+                  case 3:
+                     r2->animarCuerpo(-0.01);
+                  break;
+               }
+            }
+            else{
+               switch(gradoLibertad){
+                  case -1:
+                     if(v_Cuerpo > min_speed){
+                        v_Cuerpo /= 2;
+                     }
+
+                     if(v_Cabeza > min_speed){
+                        v_Cabeza /= 2;
+                     }
+
+                     if(v_a_Periscopio > min_speed){
+                        v_a_Periscopio /= 2;
+                     }
+
+                     if(v_h_Periscopio > min_speed){
+                        v_h_Periscopio /= 2;
+                     }
+                  break;
+
+                  case 0:
+                     if(v_h_Periscopio > min_speed){
+                        v_h_Periscopio /= 2;
+                     }
+                  break;
+
+                  case 1:
+                     if(v_a_Periscopio > min_speed){
+                        v_a_Periscopio /= 2;
+                     }
+                  break;
+
+                  case 2:
+                     if(v_Cabeza > min_speed){
+                        v_Cabeza /= 2;
+                     }
+                  break;
+
+                  case 3:
+                     if(v_Cuerpo > min_speed){
+                        v_Cuerpo /= 2;
+                     }
+                  break;
+               }
+            }
+         }
+         else{
+            cout << "Opción inválida\n";
+         }
+      break;
+
+      case 'M':
+         if(modoMenu==NADA){
+            modoMenu=ANIMACION;
+            cout << "\n-------OPCIONES DE ANIMACIÓN------\n";
+            cout << "Activar/Desactivar animación automática: A\n";
+            cout << "Mover Periscopio: 0\n";
+            cout << "Girar Periscopio: 1\n";
+            cout << "Girar Cabeza: 2\n";
+            cout << "Girar Cuerpo: 3\n";
+            cout << "Aumentar valor del grado seleccionado (";
+            if(gradoLibertad < 0){
+               cout << "-";
+            }
+            else{
+               cout << gradoLibertad;
+            }
+            cout << "): +\n";
+
+            cout << "Decrementar valor del grado seleccionado (";
+            if(gradoLibertad < 0){
+               cout << "-";
+            }
+            else{
+               cout << gradoLibertad;
+            }
+            cout << "): -\n";
+            cout << "Volver al menú principal: Q\n";
+         }
+
+         else{
+            cout << "Opción Inválida\n";
          }
       break;
 

@@ -93,3 +93,22 @@ void Cuerpo::setMaterialMetal(Material mat){
     cilindro3->setMaterial(mat);
     cabeza->setMaterialMetal(mat);
 }
+
+bool Cuerpo::animarCabeza(float v){
+    return cabeza->animar(v);
+}
+
+bool Cuerpo::animarPeriscopio(float v_a, float v_h){
+    return cabeza->animarPeriscopio(v_a,v_h);
+}
+
+bool Cuerpo::animar(float v){
+    float incremento = v * max_alpha;
+
+    if( (incremento < 0 && alpha > -max_alpha) || (incremento > 0 && alpha < max_alpha) ){
+        alpha += incremento;
+        return true;
+    }
+
+    return false;
+}

@@ -29,9 +29,9 @@ class R2{
         void setMaterialDetalle(Material mat);
         void setMaterialLentes(Material mat);
         void setMaterialMetal(Material mat);
-        void animarCuerpo(float incremento);
-        void animarCabeza(float incremento);
-        void animarPeriscopio(float incremento_alpha, float incremento_h);
+        bool animarCuerpo(float v);
+        bool animarCabeza(float v);
+        bool animarPeriscopio(float v_a, float v_h);
 };
 
 #endif

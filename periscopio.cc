@@ -64,12 +64,19 @@ void Periscopio::setMaterialDetalle(Material mat){
     cubo3->setMaterial(mat);
 }
 
-void Periscopio::animar(float incremento_alpha, float incremento_h){
-    if( (incremento_alpha < 0 && alpha > 0) || (incremento_alpha > 0 && alpha < 360) ){
+bool Periscopio::animar(float v_a, float v_h){
+    float incremento_alpha = v_a * max_a;
+    float incremento_h = v_h * min_h;
+
+    if( (incremento_alpha < 0 && alpha > -max_a) || (incremento_alpha > 0 && alpha < max_a) ){
         alpha += incremento_alpha;
+        return true;
     }
 
     if( (incremento_h < 0 && h > min_h) || (incremento_h > 0 && h < 0) ){
         h += incremento_h;
+        return true;
     }
+
+    return false;
 }

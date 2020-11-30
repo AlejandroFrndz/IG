@@ -17,6 +17,7 @@
 class Periscopio{
     private:
         const float min_h = -35.5;
+        const float max_a = 90;
         Cilindro * cilindro = nullptr;
         Cubo * cubo1 = nullptr;
         Cubo * cubo2 = nullptr;
@@ -33,7 +34,7 @@ class Periscopio{
         void setMaterialLentes(Material mat);
         void setMaterialMetal(Material mat);
         void setMaterialDetalle(Material mat);
-        void animar(float incremento_alpha, float incremento_h);
+        bool animar(float v_a, float v_h);
 };
 
 #endif

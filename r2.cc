@@ -53,3 +53,15 @@ void R2::setMaterialMetal(Material mat){
     piernaD->setMaterialMetal(mat);
     piernaI->setMaterialMetal(mat);
 }
+
+bool R2::animarCuerpo(float v){
+    return cuerpo->animar(v);
+}
+
+bool R2::animarCabeza(float v){
+    return cuerpo->animarCabeza(v);
+}
+
+bool R2::animarPeriscopio(float v_a, float v_h){
+    return cuerpo->animarPeriscopio(v_a,v_h);
+}

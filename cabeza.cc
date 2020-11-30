@@ -65,12 +65,17 @@ void Cabeza::setMaterialMetal(Material mat){
     semiesfera->setMaterial(mat);
 }
 
-void Cabeza::animar(float incremento){
-    if( (incremento < 0 && alpha > 0) || (incremento > 0 && alpha < 360) ){
+bool Cabeza::animar(float v){
+    float incremento = max_alpha*v;
+
+    if( (incremento < 0 && alpha > -max_alpha) || (incremento > 0 && alpha < max_alpha) ){
         alpha += incremento;
+        return true;
     }
+
+    return false;
 }
 
-void Cabeza::animarPeriscopio(float incremento_alpha, float incremento_h){
-    periscopio->animar(incremento_alpha,incremento_h);
+bool Cabeza::animarPeriscopio(float v_a, float v_h){
+    return periscopio->animar(v_a,v_h);
 }

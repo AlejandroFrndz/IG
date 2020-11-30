@@ -88,6 +88,19 @@ void special_keys( int tecla, int x, int y )
 }
 
 //***************************************************************************
+
+//Función para la animación automática del modelo jerariquico
+
+//***************************************************************************
+
+void funcion_idle(){
+   if(escena != 0){
+      escena->animarModeloJerarquico();
+   }
+   glutPostRedisplay();
+}
+
+//***************************************************************************
 // Programa principal
 //
 // Se encarga de iniciar la ventana, asignar las funciones e comenzar el
@@ -127,6 +140,9 @@ int main( int argc, char **argv )
 
    // asignación de la funcion llamada "dibujar" al evento de dibujo
    glutDisplayFunc( draw_scene );
+
+   // asignación de la función llamada "idle_func" al evento idle
+   glutIdleFunc( funcion_idle );
 
    // asignación de la funcion llamada "cambiar_tamanio_ventana" al evento correspondiente
    glutReshapeFunc( change_window_size );
