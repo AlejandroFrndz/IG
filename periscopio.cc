@@ -1,7 +1,7 @@
 #include "periscopio.h"
 
 Periscopio::Periscopio(){
-    cilindro = new Cilindro(10,25,100,50);
+    cilindro = new Cilindro(50,50,100,50);
     cubo1 = new Cubo(100);
     cubo2 = new Cubo(100);
     cubo3 = new Cubo(100);

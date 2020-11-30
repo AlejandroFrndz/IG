@@ -2,28 +2,26 @@
 //
 // Informática Gráfica (Grado Informática)
 //
-// Archivo: cabeza.h
+// Archivo: r2.h
 //
 // #############################################################################
 
-#ifndef CABEZA_H_INCLUDED
-#define CABEZA_H_INLCUDED
+#ifndef R2_H_INCLUDED
+#define R2_H_INCLUDED
 
 #include "aux.h"
-#include "periscopio.h"
-#include "semiesfera.h"
-#include "cubo.h"
+#include "malla.h"
+#include "pierna.h"
+#include "cuerpo.h"
 
-class Cabeza{
+class R2{
     private:
-        Periscopio * periscopio = nullptr;
-        Semiesfera * semiesfera = nullptr;
-        Semiesfera * semiesfera_ojo = nullptr;
-        Cubo * cubo_ojo = nullptr;
-        float alpha = 0;
-
+        Cuerpo * cuerpo = nullptr;
+        Pierna * piernaD = nullptr;
+        Pierna * piernaI = nullptr;
+    
     public:
-        Cabeza();
+        R2();
         void draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smooth, bool flat, dibujado modo_dibujado, bool tapas);
         void setColorDetalle(float R = 0.0, float G = 0.0, float B = 1.0);
         void setColorLentes(float R = 0.0, float G = 0.0, float B = 0.0);
@@ -31,7 +29,8 @@ class Cabeza{
         void setMaterialDetalle(Material mat);
         void setMaterialLentes(Material mat);
         void setMaterialMetal(Material mat);
-        void animar(float incremento);
+        void animarCuerpo(float incremento);
+        void animarCabeza(float incremento);
         void animarPeriscopio(float incremento_alpha, float incremento_h);
 };
 

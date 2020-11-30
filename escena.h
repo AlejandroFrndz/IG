@@ -13,7 +13,7 @@
 #include "semiesfera.h"
 #include "luzposicional.h"
 #include "luzdireccional.h"
-#include "cabeza.h"
+#include "r2.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO,SELILUMINACION} menu;
 
@@ -87,10 +87,10 @@ class Escena
     LuzDireccional * luz1 = nullptr;
 
     //Materiales
-    Material oro, plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda; 
+    Material oro, plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda, turquesa;
    
     //R2
-    Cabeza * cabeza = nullptr;
+    R2 * r2 = nullptr;
 
     public:
 

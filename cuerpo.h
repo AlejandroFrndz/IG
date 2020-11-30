@@ -2,28 +2,33 @@
 //
 // Informática Gráfica (Grado Informática)
 //
-// Archivo: cabeza.h
+// Archivo: cuerpo.h
 //
 // #############################################################################
 
-#ifndef CABEZA_H_INCLUDED
-#define CABEZA_H_INLCUDED
+#ifndef CUERPO_H_INCLUDED
+#define CUERPO_H_INCLUDED
 
 #include "aux.h"
-#include "periscopio.h"
-#include "semiesfera.h"
+#include "malla.h"
+#include "cilindro.h"
 #include "cubo.h"
+#include "cabeza.h"
 
-class Cabeza{
+class Cuerpo{
     private:
-        Periscopio * periscopio = nullptr;
-        Semiesfera * semiesfera = nullptr;
-        Semiesfera * semiesfera_ojo = nullptr;
-        Cubo * cubo_ojo = nullptr;
+        const float max_alpha = 15;
+        Cubo * cubo1 = nullptr;
+        Cubo * cubo2 = nullptr;
+        Cubo * cubo3 = nullptr;
+        Cilindro * cilindro1 = nullptr;
+        Cilindro * cilindro2 = nullptr;
+        Cilindro * cilindro3 = nullptr;
+        Cabeza * cabeza = nullptr;
         float alpha = 0;
 
     public:
-        Cabeza();
+        Cuerpo();
         void draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smooth, bool flat, dibujado modo_dibujado, bool tapas);
         void setColorDetalle(float R = 0.0, float G = 0.0, float B = 1.0);
         void setColorLentes(float R = 0.0, float G = 0.0, float B = 0.0);
@@ -32,6 +37,7 @@ class Cabeza{
         void setMaterialLentes(Material mat);
         void setMaterialMetal(Material mat);
         void animar(float incremento);
+        void animarCabeza(float incremento);
         void animarPeriscopio(float incremento_alpha, float incremento_h);
 };
 

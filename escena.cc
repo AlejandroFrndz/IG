@@ -26,13 +26,13 @@ Escena::Escena()
 
 void Escena::crear_objetos(){
 
-  cabeza = new Cabeza();
-  cabeza->setColorDetalle();
-  cabeza->setColorLentes();
-  cabeza->setColorMetal();
-  cabeza->setMaterialDetalle(esmeralda);
-  cabeza->setMaterialLentes(obsidiana);
-  cabeza->setMaterialMetal(plata);
+   r2 = new R2();
+   r2->setColorDetalle();
+   r2->setColorLentes();
+   r2->setColorMetal();
+   r2->setMaterialDetalle(turquesa);
+   r2->setMaterialLentes(obsidiana);
+   r2->setMaterialMetal(plata);
 
    //LuzPosicional
    luz0 = new LuzPosicional({0.0,0.0,0.0},GL_LIGHT0,{0.5,0.5,0.5,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
@@ -48,6 +48,7 @@ void Escena::crear_materiales(){
    plastico_verde = Material({0.0,0.0,0.0,1.0},{0.1,0.35,0.1,1.0},{0.45,0.55,0.45,1.0},0.25*128);
    goma_amarilla = Material({0.05,0.05,0.0,1.0},{0.5,0.5,0.4,1.0},{0.7,0.7,0.04,1.0},0.078125*128);
    esmeralda = Material({0.0215,0.1745,0.0215,1.0},{0.07568,0.61424,0.07568,1.0},{0.633,0.727811,0.633,1.0},0.6*128);
+   turquesa = Material({0.1f, 0.18725f, 0.1745f, 0.8f},{0.396f, 0.74151f, 0.69102f, 0.8f},{0.297254f, 0.30829f, 0.306678f, 0.8f},12.8);
 }
 
 //**************************************************************************
@@ -107,8 +108,8 @@ void Escena::dibujar()
          glPopMatrix();
       }
    }
-
-   cabeza->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
+   
+   r2->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
 
    if(smooth || flat){
       glDisable(GL_LIGHTING);

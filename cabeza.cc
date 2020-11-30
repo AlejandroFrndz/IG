@@ -3,8 +3,8 @@
 Cabeza::Cabeza(){
     periscopio = new Periscopio();
     cubo_ojo = new Cubo(100);
-    semiesfera = new Semiesfera(10,25,50);
-    semiesfera_ojo = new Semiesfera(10,25,50);
+    semiesfera = new Semiesfera(50,50,50);
+    semiesfera_ojo = new Semiesfera(50,50,50);
 }
 
 void Cabeza::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smooth, bool flat, dibujado modo_dibujado, bool tapas){

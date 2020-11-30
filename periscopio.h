@@ -14,7 +14,7 @@
 #include "cilindro.h"
 #include "cubo.h"
 
-class Periscopio : public Malla3D{
+class Periscopio{
     private:
         const float min_h = -35.5;
         Cilindro * cilindro = nullptr;
