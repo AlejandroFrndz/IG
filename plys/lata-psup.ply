@@ -1,19 +1,20 @@
 ply
 format ascii 1.0
 comment --------------------------------------------------
-comment Prácticas IG (16-17)
+comment Prácticas IG (13-14)
 comment perfil de la parte superior de la lata
 comment --------------------------------------------------
-element vertex 19
+element vertex 20
 property float32 x
 property float32 y
 property float32 z
 element face 0
 property list uint8 int32 vertex_indices
 end_header
-0.220000 1.020000 0.000000
+0.220000 1.060000 0.000000
 0.220000 1.081200 0.000000
 0.209000 1.081200 0.000000
+0.209000 1.060000 0.000000
 0.209000 1.060000 0.000000
 0.195067 1.060000 0.000000
 0.181133 1.060000 0.000000

@@ -14,6 +14,7 @@
 #include "luzposicional.h"
 #include "luzdireccional.h"
 #include "r2.h"
+#include "cuadro.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO,SELILUMINACION,ANIMACION} menu;
 
@@ -43,6 +44,9 @@ class Escena
 
     //creación de los materiales para la escena
     void crear_materiales();
+
+    //carga de las imágenes de textura para la escena
+    void cargar_texturas();
 
     void clear_window();
 
@@ -87,9 +91,13 @@ class Escena
     Semiesfera * semiesfera = nullptr;
     LuzPosicional * luz0 = nullptr;
     LuzDireccional * luz1 = nullptr;
+    Cuadro * cuadro = nullptr;
 
     //Materiales
     Material oro, plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda, turquesa;
+
+    //Texturas
+    Textura tex_cuadro;
    
     //R2
     R2 * r2 = nullptr;

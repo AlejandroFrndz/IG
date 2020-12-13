@@ -19,13 +19,14 @@ Escena::Escena()
     ejes.changeAxisSize( 5000 );
 
    crear_materiales();
+   cargar_texturas();
    crear_objetos();
 
 
 }
 
 void Escena::crear_objetos(){
-
+   //Modelo Jerarquico
    r2 = new R2();
    r2->setColorDetalle();
    r2->setColorLentes();
@@ -33,6 +34,12 @@ void Escena::crear_objetos(){
    r2->setMaterialDetalle(turquesa);
    r2->setMaterialLentes(obsidiana);
    r2->setMaterialMetal(plata);
+
+   //Cuadro
+   cuadro = new Cuadro(1);
+   cuadro->establecer_colores(1,1,1);
+   cuadro->setMaterial(plata);
+   cuadro->setTextura(tex_cuadro);
 
    //LuzPosicional
    luz0 = new LuzPosicional({0.0,0.0,0.0},GL_LIGHT0,{0.5,0.5,0.5,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
@@ -49,6 +56,10 @@ void Escena::crear_materiales(){
    goma_amarilla = Material({0.05,0.05,0.0,1.0},{0.5,0.5,0.4,1.0},{0.7,0.7,0.04,1.0},0.078125*128);
    esmeralda = Material({0.0215,0.1745,0.0215,1.0},{0.07568,0.61424,0.07568,1.0},{0.633,0.727811,0.633,1.0},0.6*128);
    turquesa = Material({0.1f, 0.18725f, 0.1745f, 0.8f},{0.396f, 0.74151f, 0.69102f, 0.8f},{0.297254f, 0.30829f, 0.306678f, 0.8f},12.8);
+}
+
+void Escena::cargar_texturas(){
+   tex_cuadro = Textura("./texturas/tlou2.jpg");
 }
 
 //**************************************************************************
@@ -110,7 +121,15 @@ void Escena::dibujar()
       }
    }
    
-   r2->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
+   //r2->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
+
+   glPushMatrix();
+      glScalef(10,10,1);
+      glTranslatef(-6,-3.3,1);
+      glEnable(GL_TEXTURE_2D);
+      cuadro->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
+      glDisable(GL_TEXTURE_2D);
+   glPopMatrix();
 
    if(smooth || flat){
       glDisable(GL_LIGHTING);

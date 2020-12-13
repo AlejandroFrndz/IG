@@ -12,6 +12,7 @@
 
 #include "aux.h"
 #include "material.h"
+#include "textura.h"
 
 typedef enum {PUNTOS, ALAMBRE, SOLIDO, AJEDREZ, LUZ} visualizacion;
 typedef enum {INMEDIATO, DIFERIDO} dibujado;
@@ -50,6 +51,9 @@ class Malla3D
    //Función para establecer el material de la malla
    void setMaterial(Material mat);
 
+   //Función para establecer la textura de la malla
+   void setTextura(Textura tex);
+
    protected:
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
@@ -58,10 +62,12 @@ class Malla3D
    std::vector<Tupla3i> f, f_pares, f_impares; // una terna de 3 enteros por cada cara o triángulo
    std::vector<Tupla3f> c_puntos, c_lineas, c_solido, c_pares, c_impares; //Tabla de colores, con 3 floats por color RGB
    std::vector<Tupla3f> nc, nv; // tablas de normales de caras y vértices
+   std::vector<Tupla2f> ct; // tabla de coordenadas de textura
 
-   GLuint VBO_v = 0, VBO_f = 0, VBO_f_pares = 0, VBO_f_impares = 0, VBO_c_puntos = 0, VBO_c_lineas = 0, VBO_c_solido = 0, VBO_c_pares = 0, VBO_c_impares = 0, VBO_nv = 0; //VBOs para el modo diferido
+   GLuint VBO_v = 0, VBO_f = 0, VBO_f_pares = 0, VBO_f_impares = 0, VBO_c_puntos = 0, VBO_c_lineas = 0, VBO_c_solido = 0, VBO_c_pares = 0, VBO_c_impares = 0, VBO_nv = 0, VBO_ct = 0; //VBOs para el modo diferido
    
    Material m; // material para la visualización con iluminación
+   Textura t;
 } ;
 
 

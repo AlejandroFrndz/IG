@@ -55,6 +55,11 @@ void Malla3D::setMaterial(Material mat){
    m = mat;
 }
 
+//Asignación de la textura a la malla
+void Malla3D::setTextura(Textura tex){
+   t = tex;
+}
+
 // Visualización en modo inmediato con 'glDrawElements'
 
 void Malla3D::draw_ModoInmediato(visualizacion modo_visualizacion)
@@ -84,10 +89,17 @@ void Malla3D::draw_ModoInmediato(visualizacion modo_visualizacion)
       glEnableClientState(GL_NORMAL_ARRAY);
       glNormalPointer(GL_FLOAT,0,nv.data());
    }
+
+   if(!ct.empty()){
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      glTexCoordPointer(2,GL_FLOAT,0,ct.data());
+   }
    glDrawElements(GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, f.data());
+
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
    glDisableClientState(GL_NORMAL_ARRAY);
+   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 // -----------------------------------------------------------------------------
 // Visualización en modo diferido con 'glDrawElements' (usando VBOs)
@@ -100,6 +112,17 @@ void Malla3D::draw_ModoDiferido(visualizacion modo_visualizacion)
 
    if(VBO_f == 0){
       VBO_f = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*f.size()*sizeof(int), f.data());
+   }
+
+   if(!ct.empty()){
+      if(VBO_ct == 0){
+         VBO_ct = CrearVBO(GL_ARRAY_BUFFER, 3*ct.size()*sizeof(float), ct.data());
+      }
+      
+      glBindBuffer(GL_ARRAY_BUFFER,VBO_ct);
+      glTexCoordPointer(2,GL_FLOAT,0,0);
+      glBindBuffer(GL_ARRAY_BUFFER,0);
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
    }
 
    glBindBuffer(GL_ARRAY_BUFFER, VBO_v);
@@ -155,6 +178,7 @@ void Malla3D::draw_ModoDiferido(visualizacion modo_visualizacion)
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
    glDisableClientState(GL_NORMAL_ARRAY);
+   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
    
 }
 
@@ -268,6 +292,10 @@ void Malla3D::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool sm
 
    if(nv.empty()){
       calcular_normales();
+   }
+
+   if(!ct.empty()){
+      t.activar();
    }
 
    if(puntos){
