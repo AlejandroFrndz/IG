@@ -62,54 +62,38 @@ class Escena
     bool flat = false;
     dibujado modo_dibujado = DIFERIDO;
     bool cuboB = true;
-    bool tetraedroB = true;
-    bool objetoPLYB = true;
-    bool peonB = true;
-    bool cilindroB = true;
-    bool conoB = true;
-    bool esferaB = true;
-    bool semiesferaB = true;
+    bool cuadroB = true;
+    bool r2B = true;
     bool luz0B = false;
-    bool luz1B = true;
+    bool luz1B = false;
     bool varA = false;
     bool varB = false;
     int gradoLibertad = -1;
     bool animacionAutomatica = false;
+    bool animacionLuz = false;
 
     // Objetos de la escena
     Ejes ejes;
     Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
-    Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
-    ObjPLY * objeto_ply = nullptr;
-    ObjRevolucion * lata_superior = nullptr;
-    ObjRevolucion * lata_cuerpo = nullptr;
-    ObjRevolucion * lata_inferior = nullptr;
-    ObjRevolucion * peon = nullptr;
-    Cilindro * cilindro = nullptr;
-    Cono * cono = nullptr;
-    Esfera * esfera = nullptr;
-    Semiesfera * semiesfera = nullptr;
     LuzPosicional * luz0 = nullptr;
     LuzDireccional * luz1 = nullptr;
     Cuadro * cuadro = nullptr;
+    R2 * r2 = nullptr;
 
     //Materiales
     Material oro, plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda, turquesa;
 
     //Texturas
-    Textura tex_cuadro;
-   
-    //R2
-    R2 * r2 = nullptr;
+    Textura tex_cuadro, tex_madera;
 
     //Variables para a velocidad de la animación
-    float v_Cabeza = 0.00004;
-    float v_Cuerpo = 0.00004;
-    float v_h_Periscopio = 0.00004;
-    float v_a_Periscopio = 0.00004;
+    float v_Cabeza = 0.004;
+    float v_Cuerpo = 0.004;
+    float v_h_Periscopio = 0.004;
+    float v_a_Periscopio = 0.004;
 
-    const float max_speed = 0.00016;
-    const float min_speed = 0.00001;
+    const float max_speed = 0.064;
+    const float min_speed = 0.001;
 
     public:
 
@@ -125,6 +109,7 @@ class Escena
 	void teclaEspecial( int Tecla1, int x, int y );
 
     void animarModeloJerarquico();
+    void animarLuzPosicional();
 
 };
 #endif

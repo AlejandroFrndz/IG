@@ -35,7 +35,9 @@ void Malla3D::calcular_normales(){
 
       n = a.cross(b);
       
-      normal = n.normalized();
+      if(n.lengthSq() > 0){
+         normal = n.normalized();
+      }
       nc.push_back(normal);
    }
 
@@ -46,7 +48,9 @@ void Malla3D::calcular_normales(){
    }
 
    for(int i = 0; i < nv.size(); i++){
-      nv[i] = nv[i].normalized();
+      if(nv[i].lengthSq() > 0){
+         nv[i] = nv[i].normalized();
+      }
    }
 }
 
@@ -295,6 +299,7 @@ void Malla3D::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool sm
    }
 
    if(!ct.empty()){
+      glEnable(GL_TEXTURE_2D);
       t.activar();
    }
 
@@ -350,7 +355,7 @@ void Malla3D::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool sm
          this->draw_ModoDiferido(LUZ);
    }
 
-   if(flat){
+   else if(flat){
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       glShadeModel(GL_FLAT);
       m.aplicar();
@@ -361,5 +366,6 @@ void Malla3D::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool sm
          this->draw_ModoDiferido(LUZ);
    }
 
+   glDisable(GL_TEXTURE_2D);
 }
 

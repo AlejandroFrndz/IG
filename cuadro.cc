@@ -1,7 +1,7 @@
 #include "cuadro.h"
 
 Cuadro::Cuadro(float lado){
-    Tupla3f v0(0,0,0), v1(12*lado,0,0), v2(0,6.6*lado,0), v3(12*lado,6.6*lado,0);
+    Tupla3f v0(0,0,0), v1(1.81*lado,0,0), v2(0,lado,0), v3(1.81*lado,lado,0);
 
     v.push_back(v0);
     v.push_back(v1);

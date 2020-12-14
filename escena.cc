@@ -41,6 +41,13 @@ void Escena::crear_objetos(){
    cuadro->setMaterial(plata);
    cuadro->setTextura(tex_cuadro);
 
+   //Cubo-Textura
+   cubo = new Cubo(1);
+   cubo->establecer_colores(1,1,1);
+   cubo->setMaterial(plata);
+   cubo->calcularCoordTex();
+   cubo->setTextura(tex_madera);
+
    //LuzPosicional
    luz0 = new LuzPosicional({0.0,0.0,0.0},GL_LIGHT0,{0.5,0.5,0.5,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
    //LuzDireccional
@@ -60,6 +67,7 @@ void Escena::crear_materiales(){
 
 void Escena::cargar_texturas(){
    tex_cuadro = Textura("./texturas/tlou2.jpg");
+   tex_madera = Textura("./texturas/text-madera.jpg");
 }
 
 //**************************************************************************
@@ -86,7 +94,7 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
    std::cout << "Modo de Visualización: V\n";
    std::cout << "Modo de Dibujado: D\n";
    std::cout << "Opciones de Iluminación: I\n";
-   std::cout << "Animación Manual: M\n";
+   std::cout << "Animación: M\n";
    std::cout << "Salir: Q\n";
 }
 
@@ -121,15 +129,30 @@ void Escena::dibujar()
       }
    }
    
-   //r2->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
+   if(r2B){
+      glPushMatrix();
+         glTranslatef(0,50,-40);
+         glScalef(0.6,0.6,0.6);
+         r2->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
+      glPopMatrix();
+   }
 
-   glPushMatrix();
-      glScalef(10,10,1);
-      glTranslatef(-6,-3.3,1);
-      glEnable(GL_TEXTURE_2D);
-      cuadro->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
-      glDisable(GL_TEXTURE_2D);
-   glPopMatrix();
+
+   if(cuadroB){
+      glPushMatrix();
+         glTranslatef(40,0,1);
+         glScalef(50,50,1);
+         cuadro->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
+      glPopMatrix();
+   }
+   
+   if(cuboB){
+      glPushMatrix();
+         glTranslatef(-80,0,0);
+         glScalef(50,50,50);
+         cubo->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
+      glPopMatrix();
+   }
 
    if(smooth || flat){
       glDisable(GL_LIGHTING);
@@ -161,6 +184,13 @@ void Escena::animarModeloJerarquico(){
    }
 }
 
+//Función para la animación de la luz posicional
+void Escena::animarLuzPosicional(){
+   if((smooth || flat) && animacionLuz){
+      luz0->animar();
+   }
+}
+
 //**************************************************************************
 //
 // función que se invoca cuando se pulsa una tecla
@@ -189,7 +219,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Modo de Visualización: V\n";
             cout << "Modo de Dibujado: D\n";
             cout << "Opciones de Iluminación: I\n";
-            cout << "Animación Manual: M\n";
+            cout << "Animación: M\n";
             cout << "Salir: Q\n";
          }          
          else {
@@ -202,12 +232,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          modoMenu=SELOBJETO; 
          cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
          cout << "Activar/Desactivar Cubo: C\n";
-         cout << "Activar/Desactivar Tetraedro: T\n";
-         cout << "Activar/Desactivar Hormiga: H\n";
-         cout << "Activar/Desactivar Esfera: E\n";
-         cout << "Activar/Desactivar Cilindro: G\n";
-         cout << "Activar/Desactivar Cono: K\n";
-         cout << "Activar/Desactivar Peon: P\n";
+         cout << "Activar/Desactivar R2: R\n";
+         cout << "Activar/Desactivar Cuadro: K\n";
          cout << "Volver al menú principal: Q\n";
       break ;
 
@@ -245,12 +271,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
             cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
             cout << "Activar/Desactivar Cubo: C\n";
-            cout << "Activar/Desactivar Tetraedro: T\n";
-            cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Esfera: E\n";
-            cout << "Activar/Desactivar Cilindro: G\n";
-            cout << "Activar/Desactivar Cono: K\n";
-            cout << "Activar/Desactivar Peon: P\n";
+            cout << "Activar/Desactivar R2: R\n";
+            cout << "Activar/Desactivar Cuadro: K\n";
             cout << "Volver al menú principal: Q\n";
          }
          else{
@@ -259,28 +281,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break;
 
       case 'T' :
-         if(modoMenu==SELOBJETO){
-            if(!tetraedroB){
-               cout << "Se ha activado el tetraedro\n";
-               tetraedroB = true;
-            }
-            else{
-               cout << "Se ha desactivado el tetraedro\n";
-               tetraedroB = false;
-            }
-
-            cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
-            cout << "Activar/Desactivar Cubo: C\n";
-            cout << "Activar/Desactivar Tetraedro: T\n";
-            cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Esfera: E\n";
-            cout << "Activar/Desactivar Cilindro: G\n";
-            cout << "Activar/Desactivar Cono: K\n";
-            cout << "Activar/Desactivar Peon: P\n";
-            cout << "Volver al menú principal: Q\n";
-         }
-
-         else if(modoMenu==SELVISUALIZACION){
+         if(modoMenu==SELVISUALIZACION){
             if(!tapas){
                cout << "Se ha activado la visualización de tapas\n";
                tapas = true;
@@ -312,13 +313,14 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             }
 
             cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
-            cout << "Activar/Desactivar Iluminación: P\n";
+            cout << "Activar/Desactivar Iluminación: I\n";
             cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
             cout << "Encender/Apagar luz: 0-1\n";
             cout << "Variación de Alpha: A\n";
             cout << "Variación de Beta: B\n";
             cout << "Incrementar Ángulo: >\n";
             cout << "Decrementar Ángulo: <\n";
+            cout << "Activar animación de la luz puntual (luz0): P\n";
          }
 
          else{
@@ -348,60 +350,25 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Tapas (Objetos de Revolución): T\n";
             cout << "Volver al menú principal: Q\n";
          }
-
-         else if(modoMenu==SELOBJETO){
-               if(!peonB){
-                  cout << "Se ha activado el Peon\n";
-                  peonB = true;
-               }
-               else{
-                  cout << "Se ha desactivado el Peon\n";
-                  peonB = false;
-               }
-
-               cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
-               cout << "Activar/Desactivar Cubo: C\n";
-               cout << "Activar/Desactivar Tetraedro: T\n";
-               cout << "Activar/Desactivar Hormiga: H\n";
-               cout << "Activar/Desactivar Esfera: E\n";
-               cout << "Activar/Desactivar Cilindro: G\n";
-               cout << "Activar/Desactivar Cono: K\n";
-               cout << "Activar/Desactivar Peon: P\n";
-               cout << "Volver al menú principal: Q\n";
-            }
-
             else if(modoMenu==SELILUMINACION){
-               if(!flat && !smooth){
-                  cout << "Se ha activado la Iluminación y encendido ambas luces\n";
-                  smooth = true;
-                  flat = false;
-                  ajedrez = false;
-                  puntos = false;
-                  lineas = false;
-                  solido = false;
-                  luz0B = true;
-                  luz1B = true;
+               if(!animacionLuz){
+                  animacionLuz = true;
+                  cout << "Se ha activado la animación de la luz puntual\n";
                }
-
                else{
-                  cout << "Se ha desactivado la Iluminación y apagado ambas luces\n";
-                  smooth = false;
-                  flat = false;
-                  solido = true;
-                  luz0B = false;
-                  luz1B = false;
-                  varA = false;
-                  varB = false;
+                  animacionLuz = false;
+                  cout << "Se ha desactivado la animación de la luz puntual\n";
                }
 
                cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
-               cout << "Activar/Desactivar Iluminación: P\n";
+               cout << "Activar/Desactivar Iluminación: I\n";
                cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
                cout << "Encender/Apagar luz: 0-1\n";
                cout << "Variación de Alpha: A\n";
                cout << "Variación de Beta: B\n";
                cout << "Incrementar Ángulo: >\n";
                cout << "Decrementar Ángulo: <\n";
+               cout << "Activar animación de la luz puntual (luz0): P\n";
             }
 
             else{
@@ -500,13 +467,14 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                varA = false;
             }
             cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
-            cout << "Activar/Desactivar Iluminación: P\n";
+            cout << "Activar/Desactivar Iluminación: I\n";
             cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
             cout << "Encender/Apagar luz: 0-1\n";
             cout << "Variación de Alpha: A\n";
             cout << "Variación de Beta: B\n";
             cout << "Incrementar Ángulo: >\n";
             cout << "Decrementar Ángulo: <\n";
+            cout << "Activar animación de la luz puntual (luz0): P\n";
          }
 
          else if(modoMenu==ANIMACION){
@@ -538,13 +506,14 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             }
 
             cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
-            cout << "Activar/Desactivar Iluminación: P\n";
+            cout << "Activar/Desactivar Iluminación: I\n";
             cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
             cout << "Encender/Apagar luz: 0-1\n";
             cout << "Variación de Alpha: A\n";
             cout << "Variación de Beta: B\n";
             cout << "Incrementar Ángulo: >\n";
             cout << "Decrementar Ángulo: <\n";
+            cout << "Activar animación de la luz puntual (luz0): P\n";
          }
 
          else{
@@ -664,103 +633,41 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
       break;
 
-      case 'H' :
-         if(modoMenu==SELOBJETO){
-            if(!objetoPLYB){
-               cout << "Se ha activado la hormiga\n";
-               objetoPLYB = true;
-            }
-            else{
-               cout << "Se ha desactivado la hormiga\n";
-               objetoPLYB = false;
-            }
-
-            cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
-            cout << "Activar/Desactivar Cubo: C\n";
-            cout << "Activar/Desactivar Tetraedro: T\n";
-            cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Esfera: E\n";
-            cout << "Activar/Desactivar Cilindro: G\n";
-            cout << "Activar/Desactivar Cono: K\n";
-            cout << "Activar/Desactivar Peon: P\n";
-            cout << "Volver al menú principal: Q\n";
-         }
-         else{
-            cout << "Opción inválida\n";
-         }
-      break;
-
-      case 'E' :
-         if(modoMenu==SELOBJETO){
-            if(!esferaB){
-               cout << "Se ha activado la esfera\n";
-               esferaB = true;
-            }
-            else{
-               cout << "Se ha desactivado la esfera\n";
-               esferaB = false;
-            }
-
-            cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
-            cout << "Activar/Desactivar Cubo: C\n";
-            cout << "Activar/Desactivar Tetraedro: T\n";
-            cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Esfera: E\n";
-            cout << "Activar/Desactivar Cilindro: G\n";
-            cout << "Activar/Desactivar Cono: K\n";
-            cout << "Activar/Desactivar Peon: P\n";
-            cout << "Volver al menú principal: Q\n";
-         }
-         else{
-            cout << "Opción inválida\n";
-         }
-      break;
-
-      case 'G' :
-         if(modoMenu==SELOBJETO){
-            if(!cilindroB){
-               cout << "Se ha activado el cilindro\n";
-               cilindroB = true;
-            }
-            else{
-               cout << "Se ha desactivado el cilindro\n";
-               cilindroB = false;
-            }
-
-            cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
-            cout << "Activar/Desactivar Cubo: C\n";
-            cout << "Activar/Desactivar Tetraedro: T\n";
-            cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Esfera: E\n";
-            cout << "Activar/Desactivar Cilindro: G\n";
-            cout << "Activar/Desactivar Cono: K\n";
-            cout << "Activar/Desactivar Peon: P\n";
-            cout << "Volver al menú principal: Q\n";
-         }
-         else{
-            cout << "Opción inválida\n";
-         }
-      break;
-
       case 'K' :
          if(modoMenu==SELOBJETO){
-            if(!conoB){
-               cout << "Se ha activado el cono\n";
-               conoB = true;
+            if(!cuadroB){
+               cout << "Se ha activado el cuadro\n";
+               cuadroB = true;
             }
             else{
-               cout << "Se ha desactivado el cono\n";
-               conoB = false;
+               cout << "Se ha desactivado el cuadro\n";
+               cuadroB = false;
             }
-
             cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
             cout << "Activar/Desactivar Cubo: C\n";
-            cout << "Activar/Desactivar Tetraedro: T\n";
-            cout << "Activar/Desactivar Hormiga: H\n";
-            cout << "Activar/Desactivar Esfera: E\n";
-            cout << "Activar/Desactivar Cilindro: G\n";
-            cout << "Activar/Desactivar Cono: K\n";
-            cout << "Activar/Desactivar Peon: P\n";
+            cout << "Activar/Desactivar R2: R\n";
+            cout << "Activar/Desactivar Cuadro: K\n";
+            cout << "Volver al menú principal: Q\n";
+         }
+         else{
+            cout << "Opción inválida\n";
+         }
+      break;
+      
+      case 'R' :
+         if(modoMenu==SELOBJETO){
+            if(!r2B){
+               cout << "Se ha activado el R2 (Modelo Jerarquico)\n";
+               r2B = true;
+            }
+            else{
+               cout << "Se ha desactivado el R2 (Modelo Jerarquico)\n";
+               r2B = false;
+            }
+            cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
+            cout << "Activar/Desactivar Cubo: C\n";
+            cout << "Activar/Desactivar R2: R\n";
+            cout << "Activar/Desactivar Cuadro: K\n";
             cout << "Volver al menú principal: Q\n";
          }
          else{
@@ -769,15 +676,54 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break;
 
       case 'I':
-         modoMenu = SELILUMINACION;
-         cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
-         cout << "Activar/Desactivar Iluminación: P\n";
-         cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
-         cout << "Encender/Apagar luz: 0-1\n";
-         cout << "Variación de Alpha: A\n";
-         cout << "Variación de Beta: B\n";
-         cout << "Incrementar Ángulo: >\n";
-         cout << "Decrementar Ángulo: <\n";
+         if(modoMenu==NADA){
+            modoMenu = SELILUMINACION;
+            cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
+            cout << "Activar/Desactivar Iluminación: I\n";
+            cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
+            cout << "Encender/Apagar luz: 0-1\n";
+            cout << "Variación de Alpha: A\n";
+            cout << "Variación de Beta: B\n";
+            cout << "Incrementar Ángulo: >\n";
+            cout << "Decrementar Ángulo: <\n";
+            cout << "Activar animación de la luz puntual (luz0): P\n";
+         }
+
+         else if(modoMenu==SELILUMINACION){
+            if(!flat && !smooth){
+               cout << "Se ha activado la Iluminación y encendido ambas luces\n";
+               smooth = true;
+               flat = false;
+               ajedrez = false;
+               puntos = false;
+               lineas = false;
+               solido = false;
+               luz0B = true;
+               luz1B = true;
+            }
+
+            else{
+               cout << "Se ha desactivado la Iluminación y apagado ambas luces\n";
+               smooth = false;
+               flat = false;
+               solido = true;
+               luz0B = false;
+               luz1B = false;
+               varA = false;
+               varB = false;
+               animacionLuz = false;
+            }
+
+            cout << "\n-------OPCIONES DE ILUMINACIÓN-------\n";
+            cout << "Activar/Desactivar Iluminación: I\n";
+            cout << "Cambiar Visualización Suave/Plana (Suave por defecto): T\n";
+            cout << "Encender/Apagar luz: 0-1\n";
+            cout << "Variación de Alpha: A\n";
+            cout << "Variación de Beta: B\n";
+            cout << "Incrementar Ángulo: >\n";
+            cout << "Decrementar Ángulo: <\n";
+            cout << "Activar animación de la luz puntual (luz0): P\n";
+         }
       break;
 
       case '>':
@@ -815,62 +761,62 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                   break;
 
                   case 0:
-                     r2->animarPeriscopio(0,-0.01);
+                     r2->animarPeriscopio(0,-0.05);
                   break;
 
                   case 1:
-                     r2->animarPeriscopio(0.01,0);
+                     r2->animarPeriscopio(0.05,0);
                   break;
 
                   case 2:
-                     r2->animarCabeza(0.01);
+                     r2->animarCabeza(0.05);
                   break;
 
                   case 3:
-                     r2->animarCuerpo(0.01);
+                     r2->animarCuerpo(0.05);
                   break;
                }
             }
             else{
                switch(gradoLibertad){
                   case -1:
-                     if(v_Cuerpo < max_speed){
+                     if(abs(v_Cuerpo) < max_speed){
                         v_Cuerpo *= 2;
                      }
 
-                     if(v_Cabeza < max_speed){
+                     if(abs(v_Cabeza) < max_speed){
                         v_Cabeza *= 2;
                      }
 
-                     if(v_a_Periscopio < max_speed){
+                     if(abs(v_a_Periscopio) < max_speed){
                         v_a_Periscopio *= 2;
                      }
 
-                     if(v_h_Periscopio < max_speed){
+                     if(abs(v_h_Periscopio) < max_speed){
                         v_h_Periscopio *= 2;
                      }
                   break;
 
                   case 0:
-                     if(v_h_Periscopio < max_speed){
+                     if(abs(v_h_Periscopio) < max_speed){
                         v_h_Periscopio *= 2;
                      }
                   break;
 
                   case 1:
-                     if(v_a_Periscopio < max_speed){
+                     if(abs(v_a_Periscopio) < max_speed){
                         v_a_Periscopio *= 2;
                      }
                   break;
 
                   case 2:
-                     if(v_Cabeza < max_speed){
+                     if(abs(v_Cabeza) < max_speed){
                         v_Cabeza *= 2;
                      }
                   break;
 
                   case 3:
-                     if(v_Cuerpo < max_speed){
+                     if(abs(v_Cuerpo) < max_speed){
                         v_Cuerpo *= 2;
                      }
                   break;
@@ -891,62 +837,62 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                   break;
 
                   case 0:
-                     r2->animarPeriscopio(0,0.01);
+                     r2->animarPeriscopio(0,0.05);
                   break;
 
                   case 1:
-                     r2->animarPeriscopio(-0.01,0);
+                     r2->animarPeriscopio(-0.05,0);
                   break;
 
                   case 2:
-                     r2->animarCabeza(-0.01);
+                     r2->animarCabeza(-0.05);
                   break;
 
                   case 3:
-                     r2->animarCuerpo(-0.01);
+                     r2->animarCuerpo(-0.05);
                   break;
                }
             }
             else{
                switch(gradoLibertad){
                   case -1:
-                     if(v_Cuerpo > min_speed){
+                     if(abs(v_Cuerpo) > min_speed){
                         v_Cuerpo /= 2;
                      }
 
-                     if(v_Cabeza > min_speed){
+                     if(abs(v_Cabeza) > min_speed){
                         v_Cabeza /= 2;
                      }
 
-                     if(v_a_Periscopio > min_speed){
+                     if(abs(v_a_Periscopio) > min_speed){
                         v_a_Periscopio /= 2;
                      }
 
-                     if(v_h_Periscopio > min_speed){
+                     if(abs(v_h_Periscopio) > min_speed){
                         v_h_Periscopio /= 2;
                      }
                   break;
 
                   case 0:
-                     if(v_h_Periscopio > min_speed){
+                     if(abs(v_h_Periscopio) > min_speed){
                         v_h_Periscopio /= 2;
                      }
                   break;
 
                   case 1:
-                     if(v_a_Periscopio > min_speed){
+                     if(abs(v_a_Periscopio) > min_speed){
                         v_a_Periscopio /= 2;
                      }
                   break;
 
                   case 2:
-                     if(v_Cabeza > min_speed){
+                     if(abs(v_Cabeza) > min_speed){
                         v_Cabeza /= 2;
                      }
                   break;
 
                   case 3:
-                     if(v_Cuerpo > min_speed){
+                     if(abs(v_Cuerpo) > min_speed){
                         v_Cuerpo /= 2;
                      }
                   break;
