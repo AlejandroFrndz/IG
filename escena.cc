@@ -228,34 +228,49 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break ;
 
       case 'O' :
-         // ESTAMOS EN MODO SELECCION DE OBJETO
-         modoMenu=SELOBJETO; 
-         cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
-         cout << "Activar/Desactivar Cubo: C\n";
-         cout << "Activar/Desactivar R2: R\n";
-         cout << "Activar/Desactivar Cuadro: K\n";
-         cout << "Volver al menú principal: Q\n";
+         if(modoMenu==NADA){
+            modoMenu=SELOBJETO; 
+            cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
+            cout << "Activar/Desactivar Cubo: C\n";
+            cout << "Activar/Desactivar R2: R\n";
+            cout << "Activar/Desactivar Cuadro: K\n";
+            cout << "Volver al menú principal: Q\n";
+         }
+
+         else{
+            cout << "Opción inválida\n";
+         }
       break ;
 
       case 'V' :
-         // ESTAMOS EN MODO SELECCION DE MODO DE VISUALIZACION
-         modoMenu=SELVISUALIZACION;
-         cout << "\n-------OPCIONES DE VISUALIZACIÓN-------\n";
-         cout << "Activar/Desactivar Puntos: P\n";
-         cout << "Activar/Desactivar Líneas: L\n";
-         cout << "Activar/Desactivar Sólido: S (Por defecto)\n";
-         cout << "Activar/Desactivar Ajedrez: A\n";
-         cout << "Activar/Desactivar Tapas (Objetos de Revolución): T\n";
-         cout << "Volver al menú principal: Q\n";
+         if(modoMenu==NADA){
+            modoMenu=SELVISUALIZACION;
+            cout << "\n-------OPCIONES DE VISUALIZACIÓN-------\n";
+            cout << "Activar/Desactivar Puntos: P\n";
+            cout << "Activar/Desactivar Líneas: L\n";
+            cout << "Activar/Desactivar Sólido: S (Por defecto)\n";
+            cout << "Activar/Desactivar Ajedrez: A\n";
+            cout << "Activar/Desactivar Tapas (Objetos de Revolución): T\n";
+            cout << "Volver al menú principal: Q\n";
+         }
+
+         else{
+            cout << "Opción inválida\n";
+         }
       break ;
        
       case 'D' :
-         // ESTAMOS EN MODO SELECCION DE DIBUJADO
-         modoMenu=SELDIBUJADO;
-         cout << "\n-------OPCIONES DE DIBUJADO-------\n";
-         cout << "Activar el dibujado en modo inmediato con glDrawElements: 1\n";
-         cout << "Activar el dibujado en modo diferido con VBOs (por defecto): 2\n";
-         cout << "Volver al menú principal: Q\n";
+         if(modoMenu==NADA){
+            modoMenu=SELDIBUJADO;
+            cout << "\n-------OPCIONES DE DIBUJADO-------\n";
+            cout << "Activar el dibujado en modo inmediato con glDrawElements: 1\n";
+            cout << "Activar el dibujado en modo diferido con VBOs (por defecto): 2\n";
+            cout << "Volver al menú principal: Q\n";
+         }
+
+         else{
+            cout << "Opción inválida\n";
+         }
       break ;
 
       case 'C' :
