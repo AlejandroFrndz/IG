@@ -48,6 +48,13 @@ void Escena::crear_objetos(){
    cubo->calcularCoordTex();
    cubo->setTextura(tex_madera);
 
+   //Lata
+   lata = new ObjRevolucion("./plys/lata-pcue.ply",50,true,true);
+   lata->establecer_colores(1,1,1);
+   lata->setMaterial(plata);
+   lata->setTextura(tex_lata);
+   lata->calcularCoordTex();
+
    //LuzPosicional
    luz0 = new LuzPosicional({0.0,0.0,0.0},GL_LIGHT0,{0.5,0.5,0.5,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
    //LuzDireccional
@@ -68,6 +75,7 @@ void Escena::crear_materiales(){
 void Escena::cargar_texturas(){
    tex_cuadro = Textura("./texturas/tlou2.jpg");
    tex_madera = Textura("./texturas/text-madera.jpg");
+   tex_lata = Textura("./texturas/text-lata-1.jpg");
 }
 
 //**************************************************************************
@@ -129,6 +137,7 @@ void Escena::dibujar()
       }
    }
    
+   /*
    if(r2B){
       glPushMatrix();
          glTranslatef(0,50,-40);
@@ -152,7 +161,14 @@ void Escena::dibujar()
          glScalef(50,50,50);
          cubo->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
       glPopMatrix();
-   }
+   }*/
+
+   
+   glPushMatrix();
+      glScalef(50,50,50);
+      lata->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
+   glPopMatrix();
+
 
    if(smooth || flat){
       glDisable(GL_LIGHTING);

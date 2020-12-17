@@ -19,7 +19,6 @@ ObjRevolucion::ObjRevolucion() {}
 ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf, short eje) {
    std::vector<Tupla3f> perfil_original;
    ply::read_vertices(archivo, perfil_original);
-
    crearMalla(perfil_original,num_instancias,tapa_sup,tapa_inf,eje);
 }
 
@@ -34,6 +33,8 @@ ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> perfil, int num_instancias, bo
 void ObjRevolucion::crearMalla(const std::vector<Tupla3f> &perfil_original, int num_instancias, bool tapa_sup, bool tapa_inf, short eje){
    std::vector<Tupla3f> perfil;
    perfil = perfil_original;
+   perfil_size = perfil.size();
+   perfil_origen = perfil_original;
 
    switch (eje)
    {
@@ -62,6 +63,13 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> &perfil_original, int 
    extraerTapas(perfil,eje);
 
    crearVertices(perfil,num_instancias,eje);
+
+   for(int i = 0; i < perfil_size; i++){
+      v.push_back(v[i]);
+   }
+   num_instancias++;
+   n_instancias = num_instancias;
+
    crearCaras(perfil,num_instancias,eje);
    ntapas_f = f.size();
    crearTapas(perfil,num_instancias,tapa_sup,tapa_inf,eje);
@@ -372,11 +380,51 @@ void ObjRevolucion::crearTapas(const std::vector<Tupla3f> &perfil, int num_insta
    }
 }
 
+void ObjRevolucion::calcularCoordTex(){
+   std::vector<float> distancias;
+   std::vector<Tupla2f> aux;
+   float s, t;
+   distancias.resize(perfil_size+1);
+   distancias[0] = 0;
+
+   for(int i = 1; i < perfil_size; i++){
+      distancias[i] = distancias[i-1] + distancia(perfil_origen[i-1], perfil_origen[i]);
+   }
+
+   for(int i = 0; i < n_instancias; i++){
+      for(int j = 0; j < perfil_size; j++){
+         s = (float) i/(n_instancias-1);
+         t = (float) distancias[j]/distancias[perfil_size-1];
+
+         aux.push_back({s,t});
+      }
+   }
+
+   for(int i = aux.size()-1; i >= 0; i--){
+      ct.push_back(aux[i]);
+   }
+
+}
+
+float ObjRevolucion::distancia(Tupla3f p, Tupla3f q){
+   float x,y,z;
+   x = pow(p[0]-q[0],2);
+   y = pow(p[1]-q[1],2);
+   z = pow(p[2]-q[2],2);
+
+   return sqrt(x+y+z);
+}
+
 void ObjRevolucion::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smooth, bool flat, dibujado modo_dibujado, bool tapas)
 {
 
    if(nv.empty()){
       calcular_normales();
+   }
+
+   if(!ct.empty()){
+      glEnable(GL_TEXTURE_2D);
+      t.activar();
    }
 
    if(puntos){
@@ -510,6 +558,8 @@ void ObjRevolucion::draw(bool puntos, bool alambre, bool solido, bool ajedrez, b
       }
    }
 
+   glDisable(GL_TEXTURE_2D);
+
 }
 
 void ObjRevolucion::draw_Inmediato_NTapas(visualizacion modo_visualizacion)
@@ -541,10 +591,16 @@ void ObjRevolucion::draw_Inmediato_NTapas(visualizacion modo_visualizacion)
    break;
    }
 
+   if(!ct.empty()){
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      glTexCoordPointer(2,GL_FLOAT,0,ct.data());
+   }
+
    glDrawElements(GL_TRIANGLES, 3*ntapas_f, GL_UNSIGNED_INT, f.data());
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
    glDisableClientState(GL_NORMAL_ARRAY);
+   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void ObjRevolucion::draw_Diferido_NTapas(visualizacion modo_visualizacion){
@@ -552,6 +608,17 @@ void ObjRevolucion::draw_Diferido_NTapas(visualizacion modo_visualizacion){
    glVertexPointer(3, GL_FLOAT, 0, 0);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glEnableClientState(GL_VERTEX_ARRAY);
+
+   if(!ct.empty()){
+      if(VBO_ct == 0){
+         VBO_ct = CrearVBO(GL_ARRAY_BUFFER, 3*ct.size()*sizeof(float), ct.data());
+      }
+      
+      glBindBuffer(GL_ARRAY_BUFFER,VBO_ct);
+      glTexCoordPointer(2,GL_FLOAT,0,0);
+      glBindBuffer(GL_ARRAY_BUFFER,0);
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+   }
 
    switch (modo_visualizacion)
    {
@@ -599,6 +666,7 @@ void ObjRevolucion::draw_Diferido_NTapas(visualizacion modo_visualizacion){
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
    glDisableClientState(GL_NORMAL_ARRAY);
+   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void ObjRevolucion::draw_Ajedrez_Diferido_NTapas(){

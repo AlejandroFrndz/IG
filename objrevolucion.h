@@ -31,10 +31,14 @@ class ObjRevolucion : public Malla3D
         ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, short eje=1) ;
         ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, short eje=1) ;
         void draw (bool puntos, bool alambre, bool solido, bool ajedrez, bool smooth, bool flat, dibujado modo_dibujado, bool tapas);
+        void calcularCoordTex();
+        float distancia(Tupla3f p, Tupla3f q);
 
     protected:
         Tupla3f poloNorte, poloSur;
         int ntapas_f, ntapas_f_par = 0, ntapas_f_impar = 0;
+        int perfil_size, n_instancias;
+        std::vector<Tupla3f> perfil_origen;
         void crearMalla(const std::vector<Tupla3f> &perfil_original, int num_instancias, bool tapa_sup, bool tapa_inf, short eje);
         void extraerTapas(std::vector<Tupla3f> &perfil, short eje);
         void crearVertices(const std::vector<Tupla3f> &perfil, int num_instancias, short eje);

@@ -79,13 +79,14 @@ class Escena
     LuzDireccional * luz1 = nullptr;
     Cuadro * cuadro = nullptr;
     R2 * r2 = nullptr;
+    ObjRevolucion * lata = nullptr;
 
     //Materiales
     Material oro, plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda, turquesa;
 
     //Texturas
-    Textura tex_cuadro, tex_madera;
-
+    Textura tex_cuadro, tex_madera, tex_lata;
+    
     //Variables para a velocidad de la animación
     float v_Cabeza = 0.004;
     float v_Cuerpo = 0.004;
