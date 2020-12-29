@@ -15,6 +15,7 @@
 #include "luzdireccional.h"
 #include "r2.h"
 #include "cuadro.h"
+#include "camara.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO,SELILUMINACION,ANIMACION} menu;
 
@@ -36,7 +37,7 @@ class Escena
     GLfloat Width, Height, Front_plane, Back_plane;
 
     // Transformación de cámara
-	void change_projection( const float ratio_xy );
+	void change_projection();
 	void change_observer();
     
     //creación de objetos de la escena
@@ -79,12 +80,17 @@ class Escena
     // Objetos de la escena
     Ejes ejes;
     Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
-    LuzPosicional * luz0 = nullptr;
-    LuzDireccional * luz1 = nullptr;
     Cuadro * cuadro = nullptr;
     R2 * r2 = nullptr;
     ObjRevolucion * lata = nullptr;
     Esfera * esfera = nullptr;
+
+    //Camaras
+    Camara * camara = nullptr;
+
+    //Luces
+    LuzPosicional * luz0 = nullptr;
+    LuzDireccional * luz1 = nullptr;
 
     //Materiales
     Material oro, plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda, turquesa;

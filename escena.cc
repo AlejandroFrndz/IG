@@ -66,6 +66,9 @@ void Escena::crear_objetos(){
    luz0 = new LuzPosicional({0.0,0.0,0.0},GL_LIGHT0,{0.5,0.5,0.5,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
    //LuzDireccional
    luz1 = new LuzDireccional({0.0,0.0},GL_LIGHT1,{0.0,0.0,0.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
+
+   //Camaras
+   camara = new Camara({0,50,200},{0,0,0},{0,1,0},1,50,2000);
 }
 
 void Escena::crear_materiales(){
@@ -101,7 +104,9 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 	Width  = UI_window_width/10;
 	Height = UI_window_height/10;
 
-   change_projection( float(UI_window_width)/float(UI_window_height) );
+   camara->setVolumen(-Width,Width,-Height,Height);
+
+   change_projection();
 	glViewport( 0, 0, UI_window_width, UI_window_height );
 
    //Mostrar opciones del menú
@@ -1046,16 +1051,20 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
    switch ( Tecla1 )
    {
 	   case GLUT_KEY_LEFT:
-         Observer_angle_y-- ;
+         camara->rotar(1,1);
+         //Observer_angle_y-- ;
          break;
 	   case GLUT_KEY_RIGHT:
-         Observer_angle_y++ ;
+         camara->rotar(1,-1);
+         //Observer_angle_y++ ;
          break;
 	   case GLUT_KEY_UP:
-         Observer_angle_x-- ;
+         camara->rotar(0,1);
+         //Observer_angle_x-- ;
          break;
 	   case GLUT_KEY_DOWN:
-         Observer_angle_x++ ;
+         camara->rotar(0,-1);
+         //Observer_angle_x++ ;
          break;
 	   case GLUT_KEY_PAGE_UP:
          Observer_distance *=1.2 ;
@@ -1075,12 +1084,13 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
 //
 //***************************************************************************
 
-void Escena::change_projection( const float ratio_xy )
+void Escena::change_projection()
 {
    glMatrixMode( GL_PROJECTION );
    glLoadIdentity();
-   const float wx = float(Height)*ratio_xy ;
-   glFrustum( -wx, wx, -Height, Height, Front_plane, Back_plane );
+   //const float wx = float(Height)*ratio_xy ;
+   //glFrustum( -wx, wx, -Height, Height, Front_plane, Back_plane );
+   camara->setProjection();
 }
 //**************************************************************************
 // Funcion que se invoca cuando cambia el tamaño de la ventana
@@ -1088,9 +1098,9 @@ void Escena::change_projection( const float ratio_xy )
 
 void Escena::redimensionar( int newWidth, int newHeight )
 {
-   Width  = newWidth/10;
-   Height = newHeight/10;
-   change_projection( float(newHeight)/float(newWidth) );
+   float ratio = (float)newWidth / (float)newHeight;
+   camara->redimensionar(ratio);
+   change_projection();
    glViewport( 0, 0, newWidth, newHeight );
 }
 
@@ -1103,7 +1113,5 @@ void Escena::change_observer()
    // posicion del observador
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   glTranslatef( 0.0, 0.0, -Observer_distance );
-   glRotatef( Observer_angle_y, 0.0 ,1.0, 0.0 );
-   glRotatef( Observer_angle_x, 1.0, 0.0, 0.0 );
+   camara->setObserver();
 }
