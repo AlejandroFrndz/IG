@@ -55,6 +55,13 @@ void Escena::crear_objetos(){
    lata->setTextura(tex_lata);
    lata->calcularCoordTex();
 
+   //Esfera-Textura
+   esfera = new Esfera(100,100,50);
+   esfera->establecer_colores(1,1,1);
+   esfera->setMaterial(plata);
+   esfera->setTextura(tex_mundo);
+   esfera->calcularCoordTex();
+
    //LuzPosicional
    luz0 = new LuzPosicional({0.0,0.0,0.0},GL_LIGHT0,{0.5,0.5,0.5,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
    //LuzDireccional
@@ -76,6 +83,7 @@ void Escena::cargar_texturas(){
    tex_cuadro = Textura("./texturas/tlou2.jpg");
    tex_madera = Textura("./texturas/text-madera.jpg");
    tex_lata = Textura("./texturas/text-lata-1.jpg");
+   tex_mundo = Textura("./texturas/mundo.jpg");
 }
 
 //**************************************************************************
@@ -137,7 +145,7 @@ void Escena::dibujar()
       }
    }
    
-   /*
+   
    if(r2B){
       glPushMatrix();
          glTranslatef(0,50,-40);
@@ -161,13 +169,22 @@ void Escena::dibujar()
          glScalef(50,50,50);
          cubo->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
       glPopMatrix();
-   }*/
-
+   }
    
-   glPushMatrix();
-      glScalef(50,50,50);
-      lata->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
-   glPopMatrix();
+   if(lataB){
+      glPushMatrix();
+         glTranslatef(80,0,80);
+         glScalef(50,50,50);
+         lata->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
+      glPopMatrix();
+   }
+
+   if(mundoB){
+      glPushMatrix();
+         glTranslatef(-70,150,0);
+         esfera->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
+      glPopMatrix();
+   }
 
 
    if(smooth || flat){
@@ -250,6 +267,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar R2: R\n";
             cout << "Activar/Desactivar Cuadro: K\n";
+            cout << "Activar/Desactivar Lata: L\n";
+            cout << "Activar/Desactivar Mundo: M";
             cout << "Volver al menú principal: Q\n";
          }
 
@@ -304,6 +323,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar R2: R\n";
             cout << "Activar/Desactivar Cuadro: K\n";
+            cout << "Activar/Desactivar Lata: L\n";
+            cout << "Activar/Desactivar Mundo: M";
             cout << "Volver al menú principal: Q\n";
          }
          else{
@@ -427,6 +448,25 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Sólido: S (Por defecto)\n";
             cout << "Activar/Desactivar Ajedrez: A\n";
             cout << "Activar/Desactivar Tapas (Objetos de Revolución): T\n";
+            cout << "Volver al menú principal: Q\n";
+         }
+
+         else if(modoMenu==SELOBJETO){
+            if(!lataB){
+               cout << "Se ha activado la lata\n";
+               lataB = true;
+            }
+            else{
+               cout << "Se ha desactivado la lata\n";
+               lataB = false;
+            }
+
+            cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
+            cout << "Activar/Desactivar Cubo: C\n";
+            cout << "Activar/Desactivar R2: R\n";
+            cout << "Activar/Desactivar Cuadro: K\n";
+            cout << "Activar/Desactivar Lata: L\n";
+            cout << "Activar/Desactivar Mundo: M";
             cout << "Volver al menú principal: Q\n";
          }
          else{
@@ -678,6 +718,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar R2: R\n";
             cout << "Activar/Desactivar Cuadro: K\n";
+            cout << "Activar/Desactivar Lata: L\n";
+            cout << "Activar/Desactivar Mundo: M";
             cout << "Volver al menú principal: Q\n";
          }
          else{
@@ -699,6 +741,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar R2: R\n";
             cout << "Activar/Desactivar Cuadro: K\n";
+            cout << "Activar/Desactivar Lata: L\n";
+            cout << "Activar/Desactivar Mundo: M";
             cout << "Volver al menú principal: Q\n";
          }
          else{
@@ -961,6 +1005,25 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                cout << gradoLibertad;
             }
             cout << "): -\n";
+            cout << "Volver al menú principal: Q\n";
+         }
+
+         else if(modoMenu==SELOBJETO){
+            if(!mundoB){
+               cout << "Se ha activado el mundo\n";
+               mundoB = true;
+            }
+            else{
+               cout << "Se ha desactivado el mundo\n";
+               mundoB = false;
+            }
+
+            cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
+            cout << "Activar/Desactivar Cubo: C\n";
+            cout << "Activar/Desactivar R2: R\n";
+            cout << "Activar/Desactivar Cuadro: K\n";
+            cout << "Activar/Desactivar Lata: L\n";
+            cout << "Activar/Desactivar Mundo: M";
             cout << "Volver al menú principal: Q\n";
          }
 

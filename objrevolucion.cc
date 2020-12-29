@@ -202,7 +202,7 @@ void ObjRevolucion::crearCaras(const std::vector<Tupla3f> &perfil, int num_insta
    switch(eje){
       case 1:
          //Rotar en y
-         for(int i = 0; i < num_instancias; i++){
+         for(int i = 0; i < num_instancias-1; i++){
             for(int j = 0; j < perfil.size()-1; j++){
                a = perfil.size() * i + j;
                b = perfil.size() * ((i + 1) % num_instancias) + j;
@@ -221,7 +221,7 @@ void ObjRevolucion::crearCaras(const std::vector<Tupla3f> &perfil, int num_insta
 
       case 0:
          //Rotar en x
-         for(int i = 0; i < num_instancias; i++){
+         for(int i = 0; i < num_instancias-1; i++){
             for(int j = 0; j < perfil.size()-1; j++){
                a = perfil.size() * i + j;
                b = perfil.size() * ((i + 1) % num_instancias) + j;
@@ -240,7 +240,7 @@ void ObjRevolucion::crearCaras(const std::vector<Tupla3f> &perfil, int num_insta
 
       case 2:
          //Rotar en z
-         for(int i = 0; i < num_instancias; i++){
+         for(int i = 0; i < num_instancias-1; i++){
             for(int j = 0; j < perfil.size()-1; j++){
                a = perfil.size() * i + j;
                b = perfil.size() * ((i + 1) % num_instancias) + j;

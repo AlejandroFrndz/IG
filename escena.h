@@ -61,9 +61,6 @@ class Escena
     bool smooth = false;
     bool flat = false;
     dibujado modo_dibujado = DIFERIDO;
-    bool cuboB = true;
-    bool cuadroB = true;
-    bool r2B = true;
     bool luz0B = false;
     bool luz1B = false;
     bool varA = false;
@@ -71,6 +68,13 @@ class Escena
     int gradoLibertad = -1;
     bool animacionAutomatica = false;
     bool animacionLuz = false;
+
+    //Booleanos para la selección de objeto
+    bool cuboB = true;
+    bool cuadroB = true;
+    bool r2B = true;
+    bool lataB = true;
+    bool mundoB = true;
 
     // Objetos de la escena
     Ejes ejes;
@@ -80,12 +84,13 @@ class Escena
     Cuadro * cuadro = nullptr;
     R2 * r2 = nullptr;
     ObjRevolucion * lata = nullptr;
+    Esfera * esfera = nullptr;
 
     //Materiales
     Material oro, plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda, turquesa;
 
     //Texturas
-    Textura tex_cuadro, tex_madera, tex_lata;
+    Textura tex_cuadro, tex_madera, tex_lata, tex_mundo;
     
     //Variables para a velocidad de la animación
     float v_Cabeza = 0.004;
