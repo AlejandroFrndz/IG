@@ -68,7 +68,9 @@ void Escena::crear_objetos(){
    luz1 = new LuzDireccional({0.0,0.0},GL_LIGHT1,{0.0,0.0,0.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
 
    //Camaras
-   camara = new Camara({0,50,200},{0,0,0},{0,1,0},1,50,2000);
+   camaras[0] = new Camara({0,50,400},{0,0,0},{0,1,0},0,50,2000);
+   camaras[1] = new Camara({0,50,200},{0,0,0},{0,1,0},1,50,2000);
+   camaras[2] = new Camara({0,0,150},{0,0,0},{0,1,0},1,50,2000);
 }
 
 void Escena::crear_materiales(){
@@ -104,7 +106,9 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 	Width  = UI_window_width/10;
 	Height = UI_window_height/10;
 
-   camara->setVolumen(-Width,Width,-Height,Height);
+   for(int i = 0; i < 3; i++){
+      camaras[i]->setVolumen(-Width,Width,-Height,Height);
+   }
 
    change_projection();
 	glViewport( 0, 0, UI_window_width, UI_window_height );
@@ -116,6 +120,7 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
    std::cout << "Modo de Dibujado: D\n";
    std::cout << "Opciones de Iluminación: I\n";
    std::cout << "Animación: M\n";
+   std::cout << "Selección de Cámara: C\n";
    std::cout << "Salir: Q\n";
 }
 
@@ -258,6 +263,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Modo de Dibujado: D\n";
             cout << "Opciones de Iluminación: I\n";
             cout << "Animación: M\n";
+            cout << "Selección de Cámara: C\n";
             cout << "Salir: Q\n";
          }          
          else {
@@ -331,6 +337,18 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Mundo: M";
             cout << "Volver al menú principal: Q\n";
+         }
+
+         else if(modoMenu==NADA){
+            modoMenu = SELCAMARA;
+
+            cout << "\n-------OPCIONES DE SELECCIÓN DE CÁMARA-------\n";
+            cout << "Se está usando la cámara " << camara_activa << endl;
+            cout << "Activar Cámara Ortogonal: 0\n";
+            cout << "Activar Cámara Perspectiva 1: 1\n";
+            cout << "Activar Cámara Perspectiva 2: 2\n";
+            cout << "Volver al menú principal: Q\n";
+
          }
          else{
             cout << "Opción inválida\n";
@@ -620,6 +638,19 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             }
          }
 
+         else if(modoMenu==SELCAMARA){
+            cout << "Se ha activado la cámara ortogonal\n";
+            camara_activa = 0;
+            change_projection();
+
+            cout << "\n-------OPCIONES DE SELECCIÓN DE CÁMARA-------\n";
+            cout << "Se está usando la cámara " << camara_activa << endl;
+            cout << "Activar Cámara Ortogonal: 0\n";
+            cout << "Activar Cámara Perspectiva 1: 1\n";
+            cout << "Activar Cámara Perspectiva 2: 2\n";
+            cout << "Volver al menú principal: Q\n";
+         }
+
          else{
             cout << "Opción inválida\n";
          }
@@ -660,6 +691,19 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             }
          }
 
+         else if(modoMenu==SELCAMARA){
+            cout << "Se ha activado la cámara perspectiva 1\n";
+            camara_activa = 1;
+            change_projection();
+
+            cout << "\n-------OPCIONES DE SELECCIÓN DE CÁMARA-------\n";
+            cout << "Se está usando la cámara " << camara_activa << endl;
+            cout << "Activar Cámara Ortogonal: 0\n";
+            cout << "Activar Cámara Perspectiva 1: 1\n";
+            cout << "Activar Cámara Perspectiva 2: 2\n";
+            cout << "Volver al menú principal: Q\n";
+         }
+
          else{
             cout << "Opción inválida\n";
          }
@@ -685,6 +729,19 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                cout << "Se ha deseleccionado el grado de libertad 2\n";
                gradoLibertad = -1;
             }
+         }
+
+         else if(modoMenu==SELCAMARA){
+            cout << "Se ha activado la cámara perspectiva 2\n";
+            camara_activa = 2;
+            change_projection();
+
+            cout << "\n-------OPCIONES DE SELECCIÓN DE CÁMARA-------\n";
+            cout << "Se está usando la cámara " << camara_activa << endl;
+            cout << "Activar Cámara Ortogonal: 0\n";
+            cout << "Activar Cámara Perspectiva 1: 1\n";
+            cout << "Activar Cámara Perspectiva 2: 2\n";
+            cout << "Volver al menú principal: Q\n";
          }
 
          else{
@@ -1037,6 +1094,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
       break;
 
+      case 'Z':
+         camaras[camara_activa]->setSeleccion();
+      break;
+
       default :
          cout << "Opción inválida\n";
       break;
@@ -1051,26 +1112,30 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
    switch ( Tecla1 )
    {
 	   case GLUT_KEY_LEFT:
-         camara->rotar(1,1);
+         camaras[camara_activa]->rotar(1,1);
          //Observer_angle_y-- ;
          break;
 	   case GLUT_KEY_RIGHT:
-         camara->rotar(1,-1);
+         camaras[camara_activa]->rotar(1,-1);
          //Observer_angle_y++ ;
          break;
 	   case GLUT_KEY_UP:
-         camara->rotar(0,1);
+         camaras[camara_activa]->rotar(0,1);
          //Observer_angle_x-- ;
          break;
 	   case GLUT_KEY_DOWN:
-         camara->rotar(0,-1);
+         camaras[camara_activa]->rotar(0,-1);
          //Observer_angle_x++ ;
          break;
 	   case GLUT_KEY_PAGE_UP:
-         Observer_distance *=1.2 ;
+         camaras[camara_activa]->zoom(1.2);
+         change_projection();
+         //Observer_distance *=1.2 ;
          break;
 	   case GLUT_KEY_PAGE_DOWN:
-         Observer_distance /= 1.2 ;
+         camaras[camara_activa]->zoom(0.8333);
+         change_projection();
+         //Observer_distance /= 1.2 ;
          break;
 	}
 
@@ -1090,7 +1155,7 @@ void Escena::change_projection()
    glLoadIdentity();
    //const float wx = float(Height)*ratio_xy ;
    //glFrustum( -wx, wx, -Height, Height, Front_plane, Back_plane );
-   camara->setProjection();
+   camaras[camara_activa]->setProjection();
 }
 //**************************************************************************
 // Funcion que se invoca cuando cambia el tamaño de la ventana
@@ -1099,7 +1164,9 @@ void Escena::change_projection()
 void Escena::redimensionar( int newWidth, int newHeight )
 {
    float ratio = (float)newWidth / (float)newHeight;
-   camara->redimensionar(ratio);
+   for(int i = 0; i < 3; i++){
+      camaras[i]->redimensionar(ratio);
+   }
    change_projection();
    glViewport( 0, 0, newWidth, newHeight );
 }
@@ -1113,5 +1180,43 @@ void Escena::change_observer()
    // posicion del observador
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   camara->setObserver();
+   camaras[camara_activa]->setObserver();
+}
+
+void Escena::clickRaton(int boton, int estado, int x, int y){
+   xant = x;
+   yant = y;
+
+   if(boton == GLUT_RIGHT_BUTTON){
+      if(estado == GLUT_DOWN){
+         estadoRaton=MOVIENDO_CAMARA;
+      }
+      else{
+         estadoRaton=NOACTIVO;
+      }
+   }
+   else if(boton == MOUSE_WHEEL_UP){
+      camaras[camara_activa]->zoom(0.8333);
+      change_projection();
+   }
+   else if(boton == MOUSE_WHEEL_DOWN){
+      camaras[camara_activa]->zoom(1.2);
+      change_projection();
+   }
+}
+
+void Escena::ratonMovido(int x, int y){
+   if(estadoRaton==MOVIENDO_CAMARA){
+      if(camara_activa == 0){
+         camaras[camara_activa]->rotar(1,(x-xant)*0.1);
+         camaras[camara_activa]->rotar(0,(y-yant)*0.1);
+      }
+      else{
+         camaras[camara_activa]->rotar(1,(x-xant)*0.5);
+         camaras[camara_activa]->rotar(0,(y-yant)*0.5);
+      }
+
+      xant = x;
+      yant = y;
+   }
 }

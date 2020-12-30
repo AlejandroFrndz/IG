@@ -40,6 +40,8 @@ class Camara{
         void rotarExaminar(int eje, float d);
         void setVolumen(float left, float right, float bottom, float top);
         void redimensionar(float ratio);
+        void zoom(float factor);
+        void setSeleccion();
 };
 
 #endif

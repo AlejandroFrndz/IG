@@ -89,7 +89,7 @@ void special_keys( int tecla, int x, int y )
 
 //***************************************************************************
 
-//Función para la animación automática del modelo jerariquico
+//Función idle para la animación automática del modelo jerariquico
 
 //***************************************************************************
 
@@ -99,6 +99,28 @@ void funcion_idle(){
       escena->animarLuzPosicional();
    }
    glutPostRedisplay();
+}
+
+//***************************************************************************
+
+//Función llamada cuando se hace click con el ratón
+
+//***************************************************************************
+
+void clickRaton(int boton, int estado, int x, int y){
+   if(escena != 0){
+      escena->clickRaton(boton, estado, x, y);
+   }
+}
+
+//***************************************************************************
+
+//Función llamada cuando se hace mueve el ratón
+
+//***************************************************************************
+
+void ratonMovido(int x, int y){
+   escena->ratonMovido(x,y);
 }
 
 //***************************************************************************
@@ -153,6 +175,10 @@ int main( int argc, char **argv )
 
    // asignación de la funcion llamada "tecla_Especial" al evento correspondiente
    glutSpecialFunc( special_keys );
+
+   glutMouseFunc(clickRaton);
+
+   glutMotionFunc(ratonMovido);
 
    // inicialización de librería GLEW (solo en Linux)
    #ifdef LINUX

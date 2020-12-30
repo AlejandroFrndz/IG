@@ -56,7 +56,33 @@ void Camara::rotarFirstPerson(int eje, float d){
     at = at_aux + eye;
 }
 
-void Camara::rotarExaminar(int eje, float d){}
+void Camara::rotarExaminar(int eje, float d){
+    Tupla3f eye_aux = eye - at;
+    float modulo = sqrt(eye_aux.lengthSq());
+
+    if(eje == 0){
+        eye_aux(1) = cos(d*(M_PI/180)) * eye_aux(1) - sin(d*(M_PI/180)) * eye_aux(2);
+        eye_aux(2) = sin(d*(M_PI/180)) * eye_aux(1) + cos(d*(M_PI/180)) * eye_aux(2);
+    }
+    else{
+        eye_aux(0) = cos(d*(M_PI/180)) * eye_aux(0) + sin(d*(M_PI/180)) * eye_aux(2);
+        eye_aux(2) = -sin(d*(M_PI/180)) * eye_aux(0) + cos(d*(M_PI/180)) * eye_aux(2);
+    }
+
+    eye_aux = eye_aux.normalized() * modulo;
+
+    eye = eye_aux + at;
+}
+
+void Camara::setSeleccion(){
+    if(enSeleccion){
+        eye = {0,50,200};
+    }
+    else{
+        at = {0,0,0};
+    }
+    enSeleccion = !enSeleccion;
+}
 
 void Camara::setVolumen(float left, float right, float bottom, float top){
     this->left = left;
@@ -68,4 +94,11 @@ void Camara::setVolumen(float left, float right, float bottom, float top){
 void Camara::redimensionar(float ratio){
     left = bottom * ratio;
     right = top * ratio;
+}
+
+void Camara::zoom(float factor){
+    left *= factor;
+    right *= factor;
+    bottom *= factor;
+    top *= factor;
 }

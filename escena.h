@@ -17,7 +17,11 @@
 #include "cuadro.h"
 #include "camara.h"
 
-typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO,SELILUMINACION,ANIMACION} menu;
+typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO,SELILUMINACION,ANIMACION,SELCAMARA} menu;
+typedef enum {MOVIENDO_CAMARA,NOACTIVO} raton;
+
+#define MOUSE_WHEEL_UP 3
+#define MOUSE_WHEEL_DOWN 4
 
 class Escena
 {
@@ -53,6 +57,10 @@ class Escena
 
     menu modoMenu=NADA;
 
+    raton estadoRaton = NOACTIVO;
+    int xant = 0;
+    int yant = 0;
+
     //Variables para opciones de menú
     bool solido = true;
     bool puntos = false;
@@ -86,7 +94,8 @@ class Escena
     Esfera * esfera = nullptr;
 
     //Camaras
-    Camara * camara = nullptr;
+    Camara * camaras[3] = {nullptr};
+    unsigned int camara_activa = 1;
 
     //Luces
     LuzPosicional * luz0 = nullptr;
@@ -119,6 +128,8 @@ class Escena
 	// Interacción con la escena
 	bool teclaPulsada( unsigned char Tecla1, int x, int y ) ;
 	void teclaEspecial( int Tecla1, int x, int y );
+    void clickRaton(int boton, int estado, int x, int y);
+    void ratonMovido(int x, int y);
 
     void animarModeloJerarquico();
     void animarLuzPosicional();
