@@ -24,6 +24,8 @@ class Pierna{
     public:
         Pierna(short int sentido);
         void draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smooth, bool flat, dibujado modo_dibujado);
+        void drawSeleccion();
+        void setColorSeleccion(float R, float G, float B);
         void setColorDetalle(float R = 0.0, float G = 0.0, float B = 1.0);
         void setColorMetal(float R = 0.75, float G = 0.75, float B = 0.75);
         void setMaterialDetalle(Material mat);

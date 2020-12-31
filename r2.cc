@@ -22,6 +22,28 @@ void R2::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smooth,
     glPopMatrix();
 }
 
+void R2::drawSeleccion(){
+    glPushMatrix();
+        cuerpo->drawSeleccion();
+
+        glPushMatrix();
+            glTranslatef(60,-40,0);
+            piernaD->drawSeleccion();
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(-60,-40,0);
+            piernaI->drawSeleccion();
+        glPopMatrix();
+    glPopMatrix();
+}
+
+void R2::setColorSeleccion(float R, float G, float B){
+    cuerpo->setColorSeleccion(R,G,B);
+    piernaD->setColorSeleccion(R,G,B);
+    piernaI->setColorSeleccion(R,G,B);
+}
+
 void R2::setColorDetalle(float R, float G, float B){
     cuerpo->setColorDetalle(R,G,B);
     piernaD->setColorDetalle(R,G,B);

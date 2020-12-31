@@ -58,6 +58,62 @@ void Cuerpo::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smo
     glPopMatrix();
 }
 
+void Cuerpo::drawSeleccion(){
+    glPushMatrix();
+        glRotatef(alpha,1,0,0);
+        glTranslatef(0,-85,0);
+
+        glPushMatrix();
+            glTranslatef(0,100,0);
+            cabeza->drawSeleccion();
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(0,60,45);
+            glScalef(0.4,0.1,0.1);
+            cubo1->drawSeleccion();
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(0,75,45);
+            glScalef(0.4,0.1,0.1);
+            cubo2->drawSeleccion();
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(0,90,45);
+            glScalef(0.4,0.1,0.1);
+            cubo3->drawSeleccion();
+        glPopMatrix();
+
+        cilindro1->drawSeleccion();
+
+        glPushMatrix();
+            glTranslatef(-55,85,0);
+            glRotatef(-90,0,0,1);
+            glScalef(0.3,0.1,0.3);
+            cilindro2->drawSeleccion();
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(55,85,0);
+            glRotatef(90,0,0,1);
+            glScalef(0.3,0.1,0.3);
+            cilindro3->drawSeleccion();
+        glPopMatrix();
+    glPopMatrix();
+}
+
+void Cuerpo::setColorSeleccion(float R, float G, float B){
+    cubo1->setColorSeleccion(R,G,B);
+    cubo2->setColorSeleccion(R,G,B);
+    cubo3->setColorSeleccion(R,G,B);
+    cabeza->setColorSeleccion(R,G,B);
+    cilindro1->setColorSeleccion(R,G,B);
+    cilindro2->setColorSeleccion(R,G,B);
+    cilindro3->setColorSeleccion(R,G,B);
+}
+
 void Cuerpo::setColorDetalle(float R, float G, float B){
     cubo1->establecer_colores(R,G,B);
     cubo2->establecer_colores(R,G,B);

@@ -35,6 +35,41 @@ void Cabeza::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smo
     glPopMatrix();
 }
 
+void Cabeza::drawSeleccion(){
+    glPushMatrix();
+        glRotatef(alpha,0,1,0);
+
+        //Periscopio
+        glPushMatrix();
+            glTranslatef(-25,0,0);
+            periscopio->drawSeleccion();
+        glPopMatrix();
+
+        //Ojo
+        glPushMatrix();
+            glTranslatef(0,25,40);
+            glScalef(0.2,0.2,0.2);
+            cubo_ojo->drawSeleccion();
+            glPushMatrix();
+                glTranslatef(0,0,37.5);
+                glScalef(0.7,0.7,0.7);
+                glRotatef(90,1,0,0);
+                semiesfera_ojo->drawSeleccion();
+            glPopMatrix();
+        glPopMatrix();
+
+        //Cabeza
+        semiesfera->drawSeleccion();
+    glPopMatrix();
+}
+
+void Cabeza::setColorSeleccion(float R, float G, float B){
+    periscopio->setColorSeleccion(R,G,B);
+    semiesfera->setColorSeleccion(R,G,B);
+    semiesfera_ojo->setColorSeleccion(R,G,B);
+    cubo_ojo->setColorSeleccion(R,G,B);
+}
+
 void Cabeza::setColorDetalle(float R, float G, float B){
     periscopio->setColorDetalle(R,G,B);
     cubo_ojo->establecer_colores(R,G,B);

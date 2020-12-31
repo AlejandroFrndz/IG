@@ -38,6 +38,44 @@ void Periscopio::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool
     glPopMatrix();
 }
 
+void Periscopio::drawSeleccion(){
+    glPushMatrix();
+        glTranslatef(0,h,0);
+        glRotatef(alpha,0,1,0);
+        glScalef(1,0.6,1);
+
+        glPushMatrix();
+            glScalef(0.1,1,0.1);
+            cilindro->drawSeleccion();
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(0,107.5,0);
+            glScalef(0.1,0.15,0.1);
+            cubo1->drawSeleccion();
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(0,107.5,5);
+            glScalef(0.05,0.05,0.05);
+            cubo2->drawSeleccion();
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(0,116,0);
+            glScalef(0.14,0.02,0.14);
+            cubo3->drawSeleccion();
+        glPopMatrix();
+    glPopMatrix();
+}
+
+void Periscopio::setColorSeleccion(float R, float G, float B){
+    cilindro->setColorSeleccion(R,G,B);
+    cubo1->setColorSeleccion(R,G,B);
+    cubo2->setColorSeleccion(R,G,B);
+    cubo3->setColorSeleccion(R,G,B);
+}
+
 void Periscopio::setColorLentes(float R, float G, float B){
     cubo2->establecer_colores(R,G,B);
 }

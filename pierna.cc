@@ -35,6 +35,40 @@ void Pierna::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smo
     glPopMatrix();
 }
 
+void Pierna::drawSeleccion(){
+    glPushMatrix();
+        glPushMatrix();
+            glScalef(0.15,1.1,0.3);
+            cubo1->drawSeleccion();
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(-2.5*orientacion,-55,0);
+            glScalef(0.3,0.07,0.6);
+            cubo2->drawSeleccion();
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(8*orientacion,0,0);
+            glScalef(0.01,0.9,0.2);
+            cubo3->drawSeleccion();
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(-9.5*orientacion,-42,0);
+            glScalef(0.05,0.2,0.3);
+            cubo4->drawSeleccion();
+        glPopMatrix();
+    glPopMatrix();
+}
+
+void Pierna::setColorSeleccion(float R, float G, float B){
+    cubo1->setColorSeleccion(R,G,B);
+    cubo2->setColorSeleccion(R,G,B);
+    cubo3->setColorSeleccion(R,G,B);
+    cubo4->setColorSeleccion(R,G,B);
+}
+
 void Pierna::setColorDetalle(float R, float G, float B){
     cubo3->establecer_colores(R,G,B);
 }

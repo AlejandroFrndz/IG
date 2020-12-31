@@ -31,6 +31,7 @@ void Escena::crear_objetos(){
    r2->setColorDetalle();
    r2->setColorLentes();
    r2->setColorMetal();
+   r2->setColorSeleccion(0,0,0);
    r2->setMaterialDetalle(turquesa);
    r2->setMaterialLentes(obsidiana);
    r2->setMaterialMetal(plata);
@@ -239,6 +240,14 @@ void Escena::dibujaSeleccion(){
    glDisable(GL_TEXTURE_2D);
 
    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+   if(r2B){
+      glPushMatrix();
+         glTranslatef(0,9,-40);
+         glScalef(0.6,0.6,0.6);
+         r2->drawSeleccion();
+      glPopMatrix();
+   }
 
    if(cuadroB){
       glPushMatrix();
@@ -1273,7 +1282,8 @@ void Escena::clickRaton(int boton, int estado, int x, int y){
    }
 
    else if(boton == GLUT_LEFT_BUTTON){
-      seleccion(x,y);
+      if(estado == GLUT_DOWN)
+         seleccion(x,y);
    }
 }
 

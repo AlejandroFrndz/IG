@@ -26,6 +26,8 @@ class Cabeza{
     public:
         Cabeza();
         void draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool smooth, bool flat, dibujado modo_dibujado, bool tapas);
+        void drawSeleccion();
+        void setColorSeleccion(float R, float G, float B);
         void setColorDetalle(float R = 0.0, float G = 0.0, float B = 1.0);
         void setColorLentes(float R = 0.0, float G = 0.0, float B = 0.0);
         void setColorMetal(float R = 0.75, float G = 0.75, float B = 0.75);
