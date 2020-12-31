@@ -32,7 +32,7 @@ void LuzPosicional::animar(){
     switch(paso){
         case 1:
             if(posicion(1) < 100){
-                mover({0,0.1,0});
+                mover({0,1,0});
             }
             else{
                 paso = 2;
@@ -41,7 +41,7 @@ void LuzPosicional::animar(){
 
         case 2:
             if(posicion(0) < 100){
-                mover({0.1,0,0});
+                mover({1,0,0});
             }
             else{
                 paso = 3;
@@ -50,7 +50,7 @@ void LuzPosicional::animar(){
 
         case 3:
             if(angulo < 360){
-                angulo += 0.36;
+                angulo += 3.6;
                 float x, z;
                 x = cos(angulo*(M_PI/180)) * 100;
                 z = sin(angulo*(M_PI/180)) * 100;
@@ -68,7 +68,7 @@ void LuzPosicional::animar(){
         
         case 4:
             if(posicion(0) > 0){
-                mover({-0.1,0,0});
+                mover({-1,0,0});
             }
             else if (!from5){
                 paso = 5;
@@ -80,8 +80,8 @@ void LuzPosicional::animar(){
         break;
 
         case 5:
-            if(posicion(1) > -100){
-                mover({0,-0.1,0});
+            if(posicion(1) > 0){
+                mover({0,-1,0});
             }
             else{
                 from5 = true;

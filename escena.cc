@@ -38,12 +38,20 @@ void Escena::crear_objetos(){
    //Cuadro
    cuadro = new Cuadro(1);
    cuadro->establecer_colores(1,1,1);
+   cuadro->setColorSeleccion(1,0,0);
    cuadro->setMaterial(plata);
    cuadro->setTextura(tex_cuadro);
+
+   //Suelo
+   suelo = new Suelo(2048);
+   suelo->establecer_colores(1,1,1);
+   suelo->setMaterial(plata);
+   suelo->setTextura(tex_suelo);
 
    //Cubo-Textura
    cubo = new Cubo(1);
    cubo->establecer_colores(1,1,1);
+   cubo->setColorSeleccion(0,1,0);
    cubo->setMaterial(plata);
    cubo->calcularCoordTex();
    cubo->setTextura(tex_madera);
@@ -51,6 +59,7 @@ void Escena::crear_objetos(){
    //Lata
    lata = new ObjRevolucion("./plys/lata-pcue.ply",50,true,true);
    lata->establecer_colores(1,1,1);
+   lata->setColorSeleccion(0,0,1);
    lata->setMaterial(plata);
    lata->setTextura(tex_lata);
    lata->calcularCoordTex();
@@ -58,9 +67,17 @@ void Escena::crear_objetos(){
    //Esfera-Textura
    esfera = new Esfera(100,100,50);
    esfera->establecer_colores(1,1,1);
+   esfera->setColorSeleccion(1,1,0);
    esfera->setMaterial(plata);
    esfera->setTextura(tex_mundo);
    esfera->calcularCoordTex();
+
+   //Skybox
+   skybox = new Skybox(1500);
+   skybox->establecer_colores(1,1,1);
+   skybox->setMaterial(plata);
+   skybox->setTextura(tex_cielo);
+   skybox->calcularCoordTex();
 
    //LuzPosicional
    luz0 = new LuzPosicional({0.0,0.0,0.0},GL_LIGHT0,{0.5,0.5,0.5,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
@@ -68,8 +85,8 @@ void Escena::crear_objetos(){
    luz1 = new LuzDireccional({0.0,0.0},GL_LIGHT1,{0.0,0.0,0.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
 
    //Camaras
-   camaras[0] = new Camara({0,50,400},{0,0,0},{0,1,0},0,50,2000);
-   camaras[1] = new Camara({0,50,200},{0,0,0},{0,1,0},1,50,2000);
+   camaras[0] = new Camara({0,70,400},{0,0,0},{0,1,0},0,50,2000);
+   camaras[1] = new Camara({0,70,200},{0,0,0},{0,1,0},1,50,2000);
    camaras[2] = new Camara({0,0,150},{0,0,0},{0,1,0},1,50,2000);
 }
 
@@ -89,6 +106,8 @@ void Escena::cargar_texturas(){
    tex_madera = Textura("./texturas/text-madera.jpg");
    tex_lata = Textura("./texturas/text-lata-1.jpg");
    tex_mundo = Textura("./texturas/mundo.jpg");
+   tex_suelo = Textura("./texturas/suelo.jpg");
+   tex_cielo = Textura("./texturas/cielo.jpg");
 }
 
 //**************************************************************************
@@ -158,7 +177,7 @@ void Escena::dibujar()
    
    if(r2B){
       glPushMatrix();
-         glTranslatef(0,50,-40);
+         glTranslatef(0,9,-40);
          glScalef(0.6,0.6,0.6);
          r2->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
       glPopMatrix();
@@ -167,7 +186,7 @@ void Escena::dibujar()
 
    if(cuadroB){
       glPushMatrix();
-         glTranslatef(40,0,1);
+         glTranslatef(40,-50,1);
          glScalef(50,50,1);
          cuadro->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
       glPopMatrix();
@@ -175,7 +194,7 @@ void Escena::dibujar()
    
    if(cuboB){
       glPushMatrix();
-         glTranslatef(-80,0,0);
+         glTranslatef(-80,-25,0);
          glScalef(50,50,50);
          cubo->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
       glPopMatrix();
@@ -183,7 +202,7 @@ void Escena::dibujar()
    
    if(lataB){
       glPushMatrix();
-         glTranslatef(80,0,80);
+         glTranslatef(80,-50,80);
          glScalef(50,50,50);
          lata->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
       glPopMatrix();
@@ -196,6 +215,14 @@ void Escena::dibujar()
       glPopMatrix();
    }
 
+   glPushMatrix();
+      glTranslatef(-1024,-50,1024);
+      glRotatef(-90,1,0,0);
+      suelo->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
+   glPopMatrix();
+
+   skybox->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
+
 
    if(smooth || flat){
       glDisable(GL_LIGHTING);
@@ -204,6 +231,47 @@ void Escena::dibujar()
       luz1->desactivar();
    }
     
+}
+
+void Escena::dibujaSeleccion(){
+   glDisable(GL_DITHER);
+   glDisable(GL_LIGHTING);
+   glDisable(GL_TEXTURE_2D);
+
+   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+   if(cuadroB){
+      glPushMatrix();
+         glTranslatef(40,-50,1);
+         glScalef(50,50,1);
+         cuadro->drawSeleccion();
+      glPopMatrix();
+   }
+   
+   if(cuboB){
+      glPushMatrix();
+         glTranslatef(-80,-25,0);
+         glScalef(50,50,50);
+         cubo->drawSeleccion();
+      glPopMatrix();
+   }
+   
+   if(lataB){
+      glPushMatrix();
+         glTranslatef(80,-50,80);
+         glScalef(50,50,50);
+         lata->drawSeleccion();
+      glPopMatrix();
+   }
+
+   if(mundoB){
+      glPushMatrix();
+         glTranslatef(-70,150,0);
+         esfera->drawSeleccion();
+      glPopMatrix();
+   }
+
+   glEnable(GL_DITHER);
 }
 
 //Función para la animación automática del modelo jerarquico
@@ -1203,6 +1271,10 @@ void Escena::clickRaton(int boton, int estado, int x, int y){
       camaras[camara_activa]->zoom(1.2);
       change_projection();
    }
+
+   else if(boton == GLUT_LEFT_BUTTON){
+      seleccion(x,y);
+   }
 }
 
 void Escena::ratonMovido(int x, int y){
@@ -1219,4 +1291,17 @@ void Escena::ratonMovido(int x, int y){
       xant = x;
       yant = y;
    }
+}
+
+void Escena::seleccion(int x, int y){
+   dibujaSeleccion();
+   
+   GLint viewport[4];
+   GLfloat pixel[3];
+
+   glGetIntegerv(GL_VIEWPORT,viewport);
+
+   glReadPixels(x,viewport[3]-y,1,1,GL_RGB,GL_FLOAT,(void *)pixel);
+
+   std::cout << "Color leido ha sido: " << pixel[0] << " " << pixel[1] << " " << pixel[2] << std::endl;
 }

@@ -79,7 +79,7 @@ void Camara::setSeleccion(){
         eye = {0,50,200};
     }
     else{
-        at = {0,0,0};
+        at = {-70,150,0};
     }
     enSeleccion = !enSeleccion;
 }

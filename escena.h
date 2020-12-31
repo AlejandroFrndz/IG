@@ -16,6 +16,8 @@
 #include "r2.h"
 #include "cuadro.h"
 #include "camara.h"
+#include "suelo.h"
+#include "skybox.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO,SELILUMINACION,ANIMACION,SELCAMARA} menu;
 typedef enum {MOVIENDO_CAMARA,NOACTIVO} raton;
@@ -92,6 +94,8 @@ class Escena
     R2 * r2 = nullptr;
     ObjRevolucion * lata = nullptr;
     Esfera * esfera = nullptr;
+    Suelo * suelo = nullptr;
+    Skybox * skybox = nullptr;
 
     //Camaras
     Camara * camaras[3] = {nullptr};
@@ -105,7 +109,7 @@ class Escena
     Material oro, plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda, turquesa;
 
     //Texturas
-    Textura tex_cuadro, tex_madera, tex_lata, tex_mundo;
+    Textura tex_cuadro, tex_madera, tex_lata, tex_mundo, tex_suelo, tex_cielo;
     
     //Variables para a velocidad de la animación
     float v_Cabeza = 0.004;
@@ -124,13 +128,17 @@ class Escena
 
 	// Dibujar
 	void dibujar() ;
+    void dibujaSeleccion();
 
 	// Interacción con la escena
 	bool teclaPulsada( unsigned char Tecla1, int x, int y ) ;
 	void teclaEspecial( int Tecla1, int x, int y );
     void clickRaton(int boton, int estado, int x, int y);
     void ratonMovido(int x, int y);
+    void seleccion(int x, int y);
 
+
+    //Animaciones
     void animarModeloJerarquico();
     void animarLuzPosicional();
 

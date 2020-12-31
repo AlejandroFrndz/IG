@@ -44,9 +44,13 @@ class Malla3D
    //Funciones para dibujar en modo ajedrez
    void draw_Ajedrez_Inmediato();
    void draw_Ajedrez_Diferido();
+   
+   void drawSeleccion();
 
    //Función para crear las tablas de colores de los objetos
    void establecer_colores(float R = 1.0, float G = 0.5490, float B = 0.0);
+
+   void setColorSeleccion(float R, float G, float B);
 
    //Función para establecer el material de la malla
    void setMaterial(Material mat);
@@ -60,7 +64,7 @@ class Malla3D
 
    std::vector<Tupla3f> v;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f, f_pares, f_impares; // una terna de 3 enteros por cada cara o triángulo
-   std::vector<Tupla3f> c_puntos, c_lineas, c_solido, c_pares, c_impares; //Tabla de colores, con 3 floats por color RGB
+   std::vector<Tupla3f> c_puntos, c_lineas, c_solido, c_pares, c_impares, c_seleccion; //Tabla de colores, con 3 floats por color RGB
    std::vector<Tupla3f> nc, nv; // tablas de normales de caras y vértices
    std::vector<Tupla2f> ct; // tabla de coordenadas de textura
 

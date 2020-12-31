@@ -369,3 +369,25 @@ void Malla3D::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool sm
    glDisable(GL_TEXTURE_2D);
 }
 
+void Malla3D::drawSeleccion(){
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   glEnableClientState(GL_VERTEX_ARRAY);
+   glVertexPointer(3, GL_FLOAT, 0 , v.data());
+
+   glEnableClientState(GL_COLOR_ARRAY);
+   glColorPointer(3, GL_FLOAT, 0, c_seleccion.data());
+
+   glDrawElements(GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, f.data());
+
+   glDisableClientState(GL_VERTEX_ARRAY);
+   glDisableClientState(GL_COLOR_ARRAY);
+
+}
+
+void Malla3D::setColorSeleccion(float R, float G, float B){
+   Tupla3f color(R,G,B);
+
+   for(int i = 0; i < v.size(); i++){
+      c_seleccion.push_back(color);
+   }
+}
