@@ -34,6 +34,8 @@ class R2{
         bool animarCuerpo(float v);
         bool animarCabeza(float v);
         bool animarPeriscopio(float v_a, float v_h);
+        void seleccionar();
+        void deseleccionar();
 };
 
 #endif

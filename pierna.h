@@ -30,6 +30,8 @@ class Pierna{
         void setColorMetal(float R = 0.75, float G = 0.75, float B = 0.75);
         void setMaterialDetalle(Material mat);
         void setMaterialMetal(Material mat);
+        void seleccionar();
+        void deseleccionar();
 
 };
 

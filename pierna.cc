@@ -88,3 +88,17 @@ void Pierna::setMaterialMetal(Material mat){
     cubo2->setMaterial(mat);
     cubo4->setMaterial(mat);
 }
+
+void Pierna::seleccionar(){
+    cubo1->seleccionar();
+    cubo2->seleccionar();
+    cubo3->seleccionar();
+    cubo4->seleccionar();
+}
+
+void Pierna::deseleccionar(){
+    cubo1->deseleccionar();
+    cubo2->deseleccionar();
+    cubo3->deseleccionar();
+    cubo4->deseleccionar();
+}

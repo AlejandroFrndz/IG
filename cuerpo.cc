@@ -168,3 +168,23 @@ bool Cuerpo::animar(float v){
 
     return false;
 }
+
+void Cuerpo::seleccionar(){
+    cubo1->seleccionar();
+    cubo2->seleccionar();
+    cubo3->seleccionar();
+    cilindro1->seleccionar();
+    cilindro2->seleccionar();
+    cilindro3->seleccionar();
+    cabeza->seleccionar();
+}
+
+void Cuerpo::deseleccionar(){
+    cubo1->deseleccionar();
+    cubo2->deseleccionar();
+    cubo3->deseleccionar();
+    cilindro1->deseleccionar();
+    cilindro2->deseleccionar();
+    cilindro3->deseleccionar();
+    cabeza->deseleccionar();
+}

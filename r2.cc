@@ -87,3 +87,15 @@ bool R2::animarCabeza(float v){
 bool R2::animarPeriscopio(float v_a, float v_h){
     return cuerpo->animarPeriscopio(v_a,v_h);
 }
+
+void R2::seleccionar(){
+    cuerpo->seleccionar();
+    piernaD->seleccionar();
+    piernaI->seleccionar();
+}
+
+void R2::deseleccionar(){
+    cuerpo->deseleccionar();
+    piernaD->deseleccionar();
+    piernaI->deseleccionar();
+}

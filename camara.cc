@@ -2,6 +2,7 @@
 
 Camara::Camara(Tupla3f eye, Tupla3f at, Tupla3f up, int tipo, float near, float far){
     this->eye = eye;
+    this->eyeFP = eye;
     this->at = at;
     this->up = up;
     this->tipo = tipo;
@@ -74,14 +75,19 @@ void Camara::rotarExaminar(int eje, float d){
     eye = eye_aux + at;
 }
 
-void Camara::setSeleccion(){
+void Camara::setSeleccion(Tupla3f new_at){
+    eye = eyeFP;
+    at = new_at;
+    enSeleccion = true;
+}
+
+void Camara::unsetSeleccion(){
     if(enSeleccion){
-        eye = {0,50,200};
+        eye = eyeFP;
+        at = {0,0,0};
     }
-    else{
-        at = {-70,150,0};
-    }
-    enSeleccion = !enSeleccion;
+
+    enSeleccion = false;
 }
 
 void Camara::setVolumen(float left, float right, float bottom, float top){

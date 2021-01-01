@@ -17,6 +17,7 @@ class Camara{
         Tupla3f eye;
         Tupla3f at;
         Tupla3f up;
+        Tupla3f eyeFP;
 
         int tipo; //0: ortogonal || 1: perspectiva
 
@@ -41,7 +42,8 @@ class Camara{
         void setVolumen(float left, float right, float bottom, float top);
         void redimensionar(float ratio);
         void zoom(float factor);
-        void setSeleccion();
+        void setSeleccion(Tupla3f new_at);
+        void unsetSeleccion();
 };
 
 #endif

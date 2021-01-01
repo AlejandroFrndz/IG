@@ -58,19 +58,24 @@ class Malla3D
    //Función para establecer la textura de la malla
    void setTextura(Textura tex);
 
+   void seleccionar();
+   void deseleccionar();
+
    protected:
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
 
    std::vector<Tupla3f> v;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f, f_pares, f_impares; // una terna de 3 enteros por cada cara o triángulo
-   std::vector<Tupla3f> c_puntos, c_lineas, c_solido, c_pares, c_impares, c_seleccion; //Tabla de colores, con 3 floats por color RGB
+   std::vector<Tupla3f> c_puntos, c_lineas, c_solido, c_pares, c_impares, c_seleccion, c_seleccionado; //Tabla de colores, con 3 floats por color RGB
    std::vector<Tupla3f> nc, nv; // tablas de normales de caras y vértices
    std::vector<Tupla2f> ct; // tabla de coordenadas de textura
 
-   GLuint VBO_v = 0, VBO_f = 0, VBO_f_pares = 0, VBO_f_impares = 0, VBO_c_puntos = 0, VBO_c_lineas = 0, VBO_c_solido = 0, VBO_c_pares = 0, VBO_c_impares = 0, VBO_nv = 0, VBO_ct = 0; //VBOs para el modo diferido
+   bool seleccionado = false;
+
+   GLuint VBO_v = 0, VBO_f = 0, VBO_f_pares = 0, VBO_f_impares = 0, VBO_c_puntos = 0, VBO_c_lineas = 0, VBO_c_solido = 0, VBO_c_pares = 0, VBO_c_impares = 0, VBO_nv = 0, VBO_ct = 0, VBO_c_seleccionado = 0; //VBOs para el modo diferido
    
-   Material m; // material para la visualización con iluminación
+   Material m, m_seleccionado, m_original; // material para la visualización con iluminación
    Textura t;
 } ;
 

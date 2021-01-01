@@ -37,6 +37,8 @@ class Periscopio{
         void setMaterialMetal(Material mat);
         void setMaterialDetalle(Material mat);
         bool animar(float v_a, float v_h);
+        void seleccionar();
+        void deseleccionar();
 };
 
 #endif

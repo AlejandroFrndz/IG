@@ -118,3 +118,17 @@ bool Periscopio::animar(float v_a, float v_h){
 
     return false;
 }
+
+void Periscopio::seleccionar(){
+    cilindro->seleccionar();
+    cubo1->seleccionar();
+    cubo2->seleccionar();
+    cubo3->seleccionar();
+}
+
+void Periscopio::deseleccionar(){
+    cilindro->deseleccionar();
+    cubo1->deseleccionar();
+    cubo2->deseleccionar();
+    cubo3->deseleccionar();
+}

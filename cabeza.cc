@@ -114,3 +114,17 @@ bool Cabeza::animar(float v){
 bool Cabeza::animarPeriscopio(float v_a, float v_h){
     return periscopio->animar(v_a,v_h);
 }
+
+void Cabeza::seleccionar(){
+    periscopio->seleccionar();
+    semiesfera->seleccionar();
+    semiesfera_ojo->seleccionar();
+    cubo_ojo->seleccionar();
+}
+
+void Cabeza::deseleccionar(){
+    periscopio->deseleccionar();
+    semiesfera->deseleccionar();
+    semiesfera_ojo->deseleccionar();
+    cubo_ojo->deseleccionar();
+}

@@ -36,19 +36,6 @@ void Escena::crear_objetos(){
    r2->setMaterialLentes(obsidiana);
    r2->setMaterialMetal(plata);
 
-   //Cuadro
-   cuadro = new Cuadro(1);
-   cuadro->establecer_colores(1,1,1);
-   cuadro->setColorSeleccion(1,0,0);
-   cuadro->setMaterial(plata);
-   cuadro->setTextura(tex_cuadro);
-
-   //Suelo
-   suelo = new Suelo(2048);
-   suelo->establecer_colores(1,1,1);
-   suelo->setMaterial(plata);
-   suelo->setTextura(tex_suelo);
-
    //Cubo-Textura
    cubo = new Cubo(1);
    cubo->establecer_colores(1,1,1);
@@ -73,12 +60,36 @@ void Escena::crear_objetos(){
    esfera->setTextura(tex_mundo);
    esfera->calcularCoordTex();
 
+   //Peon
+   peon = new ObjRevolucion("./plys/reverse_peon-x.ply",50,true,true,0);
+   peon->establecer_colores();
+   peon->setColorSeleccion(0,1,1);
+   peon->setMaterial(plastico_verde);
+
+   //Hormiga
+   hormiga = new ObjPLY("./plys/ant.ply");
+   hormiga->establecer_colores(1,0,0);
+   hormiga->setColorSeleccion(1,0,1);
+   hormiga->setMaterial(esmeralda);
+
+   //Tetraedro
+   tetraedro = new Tetraedro();
+   tetraedro->establecer_colores(0,0.5,0);
+   tetraedro->setColorSeleccion(1,0,0);
+   tetraedro->setMaterial(obsidiana);
+
    //Skybox
    skybox = new Skybox(1500);
    skybox->establecer_colores(1,1,1);
    skybox->setMaterial(plata);
    skybox->setTextura(tex_cielo);
    skybox->calcularCoordTex();
+
+   //Suelo
+   suelo = new Suelo(2048);
+   suelo->establecer_colores(1,1,1);
+   suelo->setMaterial(plata);
+   suelo->setTextura(tex_suelo);
 
    //LuzPosicional
    luz0 = new LuzPosicional({0.0,0.0,0.0},GL_LIGHT0,{0.5,0.5,0.5,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0});
@@ -88,11 +99,10 @@ void Escena::crear_objetos(){
    //Camaras
    camaras[0] = new Camara({0,70,400},{0,0,0},{0,1,0},0,50,2000);
    camaras[1] = new Camara({0,70,200},{0,0,0},{0,1,0},1,50,2000);
-   camaras[2] = new Camara({0,0,150},{0,0,0},{0,1,0},1,50,2000);
+   camaras[2] = new Camara({30,10,150},{0,0,0},{0,1,0},1,50,2000);
 }
 
 void Escena::crear_materiales(){
-   oro = Material({0.24725,0.1995,0.0745,1.0},{0.75164,0.60648,0.22648,1.0},{0.628281,0.555802,0.366065,1.0},0.4*128);
    plata = Material({0.19225,0.19225,0.19225,1.0},{0.50754,0.50754,0.50754,1.0},{0.508273,0.508273,0.508273,1.0},0.4*128);
    bronce = Material({0.2125,0.1275,0.054,1.0},{0.714,0.4284,0.18144,1.0},{0.393548,0.271906,0.166721,1.0},0.2*128);
    obsidiana = Material({0.05375,0.05,0.06625,1.0},{0.18275,0.17,0.22525,1.0},{0.332741,0.328634,0.346435,1.0},0.3*128);
@@ -183,19 +193,10 @@ void Escena::dibujar()
          r2->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
       glPopMatrix();
    }
-
-
-   if(cuadroB){
-      glPushMatrix();
-         glTranslatef(40,-50,1);
-         glScalef(50,50,1);
-         cuadro->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
-      glPopMatrix();
-   }
    
    if(cuboB){
       glPushMatrix();
-         glTranslatef(-80,-25,0);
+         glTranslatef(80,-25,0);
          glScalef(50,50,50);
          cubo->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
       glPopMatrix();
@@ -213,6 +214,31 @@ void Escena::dibujar()
       glPushMatrix();
          glTranslatef(-70,150,0);
          esfera->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
+      glPopMatrix();
+   }
+
+   if(tetraedroB){
+      glPushMatrix();
+         glTranslatef(-50,-50,100);
+         glScalef(50,50,50);
+         glRotatef(30,0,1,0);
+         tetraedro->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
+      glPopMatrix();
+   }
+
+   if(peonB){
+      glPushMatrix();
+         glTranslatef(-70,0,0);
+         glScalef(20,20,20);
+         peon->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado,tapas);
+      glPopMatrix();
+   }
+
+   if(hormigaB){
+      glPushMatrix();
+         glTranslatef(30,-30,80);
+         glScalef(2,2,2);
+         hormiga->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
       glPopMatrix();
    }
 
@@ -248,18 +274,10 @@ void Escena::dibujaSeleccion(){
          r2->drawSeleccion();
       glPopMatrix();
    }
-
-   if(cuadroB){
-      glPushMatrix();
-         glTranslatef(40,-50,1);
-         glScalef(50,50,1);
-         cuadro->drawSeleccion();
-      glPopMatrix();
-   }
    
    if(cuboB){
       glPushMatrix();
-         glTranslatef(-80,-25,0);
+         glTranslatef(80,-25,0);
          glScalef(50,50,50);
          cubo->drawSeleccion();
       glPopMatrix();
@@ -277,6 +295,31 @@ void Escena::dibujaSeleccion(){
       glPushMatrix();
          glTranslatef(-70,150,0);
          esfera->drawSeleccion();
+      glPopMatrix();
+   }
+
+   if(tetraedroB){
+      glPushMatrix();
+         glTranslatef(-50,-50,100);
+         glScalef(50,50,50);
+         glRotatef(30,0,1,0);
+         tetraedro->drawSeleccion();
+      glPopMatrix();
+   }
+
+   if(peonB){
+      glPushMatrix();
+         glTranslatef(-70,0,0);
+         glScalef(20,20,20);
+         peon->drawSeleccion();
+      glPopMatrix();
+   }
+
+   if(hormigaB){
+      glPushMatrix();
+         glTranslatef(30,-30,80);
+         glScalef(2,2,2);
+         hormiga->drawSeleccion();
       glPopMatrix();
    }
 
@@ -354,9 +397,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar R2: R\n";
-            cout << "Activar/Desactivar Cuadro: K\n";
             cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Mundo: M";
+            cout << "Activar/Desactivar Tetraedro: T\n";
+            cout << "Activar/Desactivar Peon: P\n";
+            cout << "Activar/Desactivar Hormiga: H\n";
             cout << "Volver al menú principal: Q\n";
          }
 
@@ -410,9 +455,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar R2: R\n";
-            cout << "Activar/Desactivar Cuadro: K\n";
             cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Mundo: M";
+            cout << "Activar/Desactivar Tetraedro: T\n";
+            cout << "Activar/Desactivar Peon: P\n";
+            cout << "Activar/Desactivar Hormiga: H\n";
             cout << "Volver al menú principal: Q\n";
          }
 
@@ -475,6 +522,27 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activar animación de la luz puntual (luz0): P\n";
          }
 
+         else if(modoMenu==SELOBJETO){
+            if(!tetraedroB){
+               cout << "Se ha activado el tetraedro\n";
+               tetraedroB = true;
+            }
+            else{
+               cout << "Se ha desactivado el tetraedro\n";
+               tetraedroB = false;
+            }
+
+            cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
+            cout << "Activar/Desactivar Cubo: C\n";
+            cout << "Activar/Desactivar R2: R\n";
+            cout << "Activar/Desactivar Lata: L\n";
+            cout << "Activar/Desactivar Mundo: M";
+            cout << "Activar/Desactivar Tetraedro: T\n";
+            cout << "Activar/Desactivar Peon: P\n";
+            cout << "Activar/Desactivar Hormiga: H\n";
+            cout << "Volver al menú principal: Q\n";
+         }
+
          else{
                cout << "Opción inválida\n";
          }
@@ -523,6 +591,27 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                cout << "Activar animación de la luz puntual (luz0): P\n";
             }
 
+            else if(modoMenu==SELOBJETO){
+               if(!peonB){
+                  cout << "Se ha activado el peón\n";
+                  peonB = true;
+               }
+               else{
+                  cout << "Se ha desactivado el peón\n";
+                  peonB = false;
+               }
+
+               cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
+               cout << "Activar/Desactivar Cubo: C\n";
+               cout << "Activar/Desactivar R2: R\n";
+               cout << "Activar/Desactivar Lata: L\n";
+               cout << "Activar/Desactivar Mundo: M";
+               cout << "Activar/Desactivar Tetraedro: T\n";
+               cout << "Activar/Desactivar Peon: P\n";
+               cout << "Activar/Desactivar Hormiga: H\n";
+               cout << "Volver al menú principal: Q\n";
+            }
+
             else{
                cout << "Opción inválida\n";
             }
@@ -564,11 +653,40 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar R2: R\n";
-            cout << "Activar/Desactivar Cuadro: K\n";
             cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Mundo: M";
+            cout << "Activar/Desactivar Tetraedro: T\n";
+            cout << "Activar/Desactivar Peon: P\n";
+            cout << "Activar/Desactivar Hormiga: H\n";
             cout << "Volver al menú principal: Q\n";
          }
+         else{
+            cout << "Opción inválida\n";
+         }
+      break;
+
+      case 'H':
+         if(modoMenu==SELOBJETO){
+            if(!hormigaB){
+               cout << "Se ha activado la hormiga\n";
+               hormigaB = true;
+            }
+            else{
+               cout << "Se ha desactivado la hormiga\n";
+               hormigaB = false;
+            }
+
+            cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
+            cout << "Activar/Desactivar Cubo: C\n";
+            cout << "Activar/Desactivar R2: R\n";
+            cout << "Activar/Desactivar Lata: L\n";
+            cout << "Activar/Desactivar Mundo: M";
+            cout << "Activar/Desactivar Tetraedro: T\n";
+            cout << "Activar/Desactivar Peon: P\n";
+            cout << "Activar/Desactivar Hormiga: H\n";
+            cout << "Volver al menú principal: Q\n";
+         }
+
          else{
             cout << "Opción inválida\n";
          }
@@ -717,7 +835,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
          else if(modoMenu==SELCAMARA){
             cout << "Se ha activado la cámara ortogonal\n";
+            deseleccionarObjeto();
             camara_activa = 0;
+            seleccionarObjeto();
             change_projection();
 
             cout << "\n-------OPCIONES DE SELECCIÓN DE CÁMARA-------\n";
@@ -770,7 +890,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
          else if(modoMenu==SELCAMARA){
             cout << "Se ha activado la cámara perspectiva 1\n";
+            deseleccionarObjeto();
             camara_activa = 1;
+            seleccionarObjeto();
             change_projection();
 
             cout << "\n-------OPCIONES DE SELECCIÓN DE CÁMARA-------\n";
@@ -810,7 +932,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
          else if(modoMenu==SELCAMARA){
             cout << "Se ha activado la cámara perspectiva 2\n";
+            deseleccionarObjeto();
             camara_activa = 2;
+            seleccionarObjeto();
             change_projection();
 
             cout << "\n-------OPCIONES DE SELECCIÓN DE CÁMARA-------\n";
@@ -842,29 +966,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Opción inválida\n";
          }
       break;
-
-      case 'K' :
-         if(modoMenu==SELOBJETO){
-            if(!cuadroB){
-               cout << "Se ha activado el cuadro\n";
-               cuadroB = true;
-            }
-            else{
-               cout << "Se ha desactivado el cuadro\n";
-               cuadroB = false;
-            }
-            cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
-            cout << "Activar/Desactivar Cubo: C\n";
-            cout << "Activar/Desactivar R2: R\n";
-            cout << "Activar/Desactivar Cuadro: K\n";
-            cout << "Activar/Desactivar Lata: L\n";
-            cout << "Activar/Desactivar Mundo: M";
-            cout << "Volver al menú principal: Q\n";
-         }
-         else{
-            cout << "Opción inválida\n";
-         }
-      break;
       
       case 'R' :
          if(modoMenu==SELOBJETO){
@@ -876,12 +977,15 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                cout << "Se ha desactivado el R2 (Modelo Jerarquico)\n";
                r2B = false;
             }
+
             cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar R2: R\n";
-            cout << "Activar/Desactivar Cuadro: K\n";
             cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Mundo: M";
+            cout << "Activar/Desactivar Tetraedro: T\n";
+            cout << "Activar/Desactivar Peon: P\n";
+            cout << "Activar/Desactivar Hormiga: H\n";
             cout << "Volver al menú principal: Q\n";
          }
          else{
@@ -1160,19 +1264,17 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "\n-------OPCIONES DE SELECCIÓN DE OBJETO-------\n";
             cout << "Activar/Desactivar Cubo: C\n";
             cout << "Activar/Desactivar R2: R\n";
-            cout << "Activar/Desactivar Cuadro: K\n";
             cout << "Activar/Desactivar Lata: L\n";
             cout << "Activar/Desactivar Mundo: M";
+            cout << "Activar/Desactivar Tetraedro: T\n";
+            cout << "Activar/Desactivar Peon: P\n";
+            cout << "Activar/Desactivar Hormiga: H\n";
             cout << "Volver al menú principal: Q\n";
          }
 
          else{
             cout << "Opción Inválida\n";
          }
-      break;
-
-      case 'Z':
-         camaras[camara_activa]->setSeleccion();
       break;
 
       default :
@@ -1294,8 +1396,8 @@ void Escena::ratonMovido(int x, int y){
          camaras[camara_activa]->rotar(0,(y-yant)*0.1);
       }
       else{
-         camaras[camara_activa]->rotar(1,(x-xant)*0.5);
-         camaras[camara_activa]->rotar(0,(y-yant)*0.5);
+         camaras[camara_activa]->rotar(1,(x-xant)*0.3);
+         camaras[camara_activa]->rotar(0,(y-yant)*0.3);
       }
 
       xant = x;
@@ -1303,15 +1405,141 @@ void Escena::ratonMovido(int x, int y){
    }
 }
 
+bool comparaColores(Tupla3f uno, Tupla3f otro){
+   return (uno[0] == otro[0] && uno[1] == otro[1] && uno[2] == otro[2]);
+}
+
 void Escena::seleccion(int x, int y){
    dibujaSeleccion();
    
    GLint viewport[4];
    GLfloat pixel[3];
+   Tupla3f color;
 
    glGetIntegerv(GL_VIEWPORT,viewport);
 
    glReadPixels(x,viewport[3]-y,1,1,GL_RGB,GL_FLOAT,(void *)pixel);
 
-   std::cout << "Color leido ha sido: " << pixel[0] << " " << pixel[1] << " " << pixel[2] << std::endl;
+   color[0] = pixel[0];
+   color[1] = pixel[1];
+   color[2] = pixel[2];
+
+   if(comparaColores({0,0,0},color)){
+      std::cout << "Se ha seleccionado el modelo jerarquico R2\n";
+      deseleccionarObjeto();
+      r2->seleccionar();
+      camaras[camara_activa]->setSeleccion({0,9,-40});
+      objSeleccionado[camara_activa] = MODELO;
+   }
+   else if(comparaColores({1,0,0},color)){
+      std::cout << "Se ha seleccionado el tetraedro\n";
+      deseleccionarObjeto();
+      tetraedro->seleccionar();
+      camaras[camara_activa]->setSeleccion({-50,-50,100});
+      objSeleccionado[camara_activa] = TETRAEDRO;
+   }
+   else if(comparaColores({0,1,0},color)){
+      std::cout << "Se ha seleccionado el cubo\n";
+      deseleccionarObjeto();
+      cubo->seleccionar();
+      camaras[camara_activa]->setSeleccion({80,-25,0});
+      objSeleccionado[camara_activa] = CUBO;
+   }
+   else if(comparaColores({0,0,1},color)){
+      std::cout << "Se ha seleccionado la lata\n";
+      deseleccionarObjeto();
+      lata->seleccionar();
+      camaras[camara_activa]->setSeleccion({80,-50,80});
+      objSeleccionado[camara_activa] = LATA;
+   }
+   else if(comparaColores({1,1,0},color)){
+      std::cout << "Se ha seleccionado la esfera (mundo)\n";
+      deseleccionarObjeto();
+      esfera->seleccionar();
+      camaras[camara_activa]->setSeleccion({-70,150,0});
+      objSeleccionado[camara_activa] = MUNDO;
+   }
+   else if(comparaColores({0,1,1},color)){
+      std::cout << "Se ha seleccionado el peon\n";
+      deseleccionarObjeto();
+      peon->seleccionar();
+      camaras[camara_activa]->setSeleccion({-70,0,0});
+      objSeleccionado[camara_activa] = PEON;
+   }
+   else if(comparaColores({1,0,1},color)){
+      std::cout << "Se ha seleccionado la hormiga\n";
+      deseleccionarObjeto();
+      hormiga->seleccionar();
+      camaras[camara_activa]->setSeleccion({30,-30,80});
+      objSeleccionado[camara_activa] = HORMIGA;
+   }
+   else{
+      camaras[camara_activa]->unsetSeleccion();
+      deseleccionarObjeto();
+      objSeleccionado[camara_activa] = NO;
+   }
+}
+
+void Escena::deseleccionarObjeto(){
+   switch (objSeleccionado[camara_activa]){
+      case MODELO:
+         r2->deseleccionar();
+      break;
+
+      case TETRAEDRO:
+         tetraedro->deseleccionar();
+      break;
+
+      case CUBO:
+         cubo->deseleccionar();
+      break;
+
+      case LATA:
+         lata->deseleccionar();
+      break;
+
+      case MUNDO:
+         esfera->deseleccionar();
+      break;
+
+      case PEON:
+         peon->deseleccionar();
+      break;
+
+      case HORMIGA:
+         hormiga->deseleccionar();
+      break;
+   }
+}
+
+void Escena::seleccionarObjeto(){
+   switch (objSeleccionado[camara_activa]){
+      case MODELO:
+         r2->seleccionar();
+      break;
+      
+      case TETRAEDRO:
+         tetraedro->seleccionar();
+      break;
+
+      case CUBO:
+         cubo->seleccionar();
+      break;
+
+      case LATA:
+         lata->seleccionar();
+      break;
+
+      case MUNDO:
+         esfera->seleccionar();
+      break;
+
+      case PEON:
+         peon->seleccionar();
+      break;
+
+      case HORMIGA:
+         hormiga->seleccionar();
+      break;
+   }
 }

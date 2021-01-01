@@ -21,6 +21,7 @@
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO,SELILUMINACION,ANIMACION,SELCAMARA} menu;
 typedef enum {MOVIENDO_CAMARA,NOACTIVO} raton;
+typedef enum {NO,MODELO,CUBO,LATA,MUNDO,TETRAEDRO,PEON,HORMIGA} objetos;
 
 #define MOUSE_WHEEL_UP 3
 #define MOUSE_WHEEL_DOWN 4
@@ -57,6 +58,9 @@ class Escena
 
     void clear_window();
 
+    void seleccionarObjeto();
+    void deseleccionarObjeto();
+
     menu modoMenu=NADA;
 
     raton estadoRaton = NOACTIVO;
@@ -82,31 +86,36 @@ class Escena
 
     //Booleanos para la selección de objeto
     bool cuboB = true;
-    bool cuadroB = true;
     bool r2B = true;
     bool lataB = true;
     bool mundoB = true;
+    bool peonB = true;
+    bool tetraedroB = true;
+    bool hormigaB = true;
 
     // Objetos de la escena
     Ejes ejes;
     Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
-    Cuadro * cuadro = nullptr;
     R2 * r2 = nullptr;
     ObjRevolucion * lata = nullptr;
     Esfera * esfera = nullptr;
     Suelo * suelo = nullptr;
     Skybox * skybox = nullptr;
+    ObjRevolucion * peon = nullptr;
+    Tetraedro * tetraedro = nullptr;
+    ObjPLY * hormiga = nullptr;
 
     //Camaras
     Camara * camaras[3] = {nullptr};
     unsigned int camara_activa = 1;
+    objetos objSeleccionado[3] = {NO};
 
     //Luces
     LuzPosicional * luz0 = nullptr;
     LuzDireccional * luz1 = nullptr;
 
     //Materiales
-    Material oro, plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda, turquesa;
+    Material plata, bronce, cobre, obsidiana, plastico_verde, goma_amarilla, esmeralda, turquesa;
 
     //Texturas
     Textura tex_cuadro, tex_madera, tex_lata, tex_mundo, tex_suelo, tex_cielo;

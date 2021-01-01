@@ -36,6 +36,8 @@ class Cabeza{
         void setMaterialMetal(Material mat);
         bool animar(float v);
         bool animarPeriscopio(float v_a, float v_h);
+        void seleccionar();
+        void deseleccionar();
 };
 
 #endif

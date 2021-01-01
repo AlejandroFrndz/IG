@@ -17,7 +17,19 @@ void Malla3D::establecer_colores(float R, float G, float B){
       c_solido.push_back(solido);
       c_pares.push_back(rojo);
       c_impares.push_back(verde);
+      c_seleccionado.push_back({1,1,0});
    }
+
+}
+
+void Malla3D::seleccionar(){
+   seleccionado = true;
+   m = m_seleccionado;
+}
+
+void Malla3D::deseleccionar(){
+   seleccionado = false;
+   m = m_original;
 }
 
 //Calculo de las tablas de normales
@@ -56,7 +68,9 @@ void Malla3D::calcular_normales(){
 
 //Asignación del material de la malla
 void Malla3D::setMaterial(Material mat){
+   m_original = mat;
    m = mat;
+   m_seleccionado = Material({0.24725,0.1995,0.0745,1.0},{0.75164,0.60648,0.22648,1.0},{0.628281,0.555802,0.366065,1.0},0.4*128);
 }
 
 //Asignación de la textura a la malla
@@ -86,7 +100,13 @@ void Malla3D::draw_ModoInmediato(visualizacion modo_visualizacion)
 
    case SOLIDO:
       glEnableClientState(GL_COLOR_ARRAY);
-      glColorPointer(3, GL_FLOAT, 0, c_solido.data());
+      if(!seleccionado){
+         glColorPointer(3, GL_FLOAT, 0, c_solido.data());
+      }
+      else{
+         glColorPointer(3, GL_FLOAT, 0, c_seleccionado.data());
+      }
+      
    break;
 
    case LUZ:
@@ -157,7 +177,15 @@ void Malla3D::draw_ModoDiferido(visualizacion modo_visualizacion)
    case SOLIDO:
       if(VBO_c_solido == 0)
          VBO_c_solido = CrearVBO(GL_ARRAY_BUFFER, 3*c_solido.size()*sizeof(float), c_solido.data());
-      glBindBuffer(GL_ARRAY_BUFFER, VBO_c_solido);
+      if(VBO_c_seleccionado == 0)
+         VBO_c_seleccionado = CrearVBO(GL_ARRAY_BUFFER, 3*c_seleccionado.size()*sizeof(float), c_seleccionado.data());
+      
+      if(!seleccionado){
+         glBindBuffer(GL_ARRAY_BUFFER, VBO_c_solido);
+      }
+      else{
+         glBindBuffer(GL_ARRAY_BUFFER, VBO_c_seleccionado);
+      }
       glColorPointer(3, GL_FLOAT,0,0);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glEnableClientState(GL_COLOR_ARRAY);

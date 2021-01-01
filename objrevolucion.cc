@@ -582,7 +582,13 @@ void ObjRevolucion::draw_Inmediato_NTapas(visualizacion modo_visualizacion)
 
    case SOLIDO:
       glEnableClientState(GL_COLOR_ARRAY);
-      glColorPointer(3, GL_FLOAT, 0, c_solido.data());
+      if(!seleccionado)
+         glColorPointer(3, GL_FLOAT, 0, c_solido.data());
+      else
+      {
+         glColorPointer(3, GL_FLOAT, 0, c_seleccionado.data());
+      }
+      
    break;
 
    case LUZ:
@@ -643,7 +649,15 @@ void ObjRevolucion::draw_Diferido_NTapas(visualizacion modo_visualizacion){
    case SOLIDO:
       if(VBO_c_solido == 0)
          VBO_c_solido = CrearVBO(GL_ARRAY_BUFFER, 3*c_solido.size()*sizeof(float), c_solido.data());
-      glBindBuffer(GL_ARRAY_BUFFER, VBO_c_solido);
+      if(VBO_c_seleccionado == 0)
+         VBO_c_seleccionado = CrearVBO(GL_ARRAY_BUFFER, 3*c_seleccionado.size()*sizeof(float), c_seleccionado.data());
+      
+      if(!seleccionado){
+         glBindBuffer(GL_ARRAY_BUFFER, VBO_c_solido);
+      }
+      else{
+         glBindBuffer(GL_ARRAY_BUFFER, VBO_c_seleccionado);
+      }
       glColorPointer(3, GL_FLOAT,0,0);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glEnableClientState(GL_COLOR_ARRAY);
