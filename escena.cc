@@ -1425,53 +1425,102 @@ void Escena::seleccion(int x, int y){
    color[2] = pixel[2];
 
    if(comparaColores({0,0,0},color)){
-      std::cout << "Se ha seleccionado el modelo jerarquico R2\n";
-      deseleccionarObjeto();
-      r2->seleccionar();
-      camaras[camara_activa]->setSeleccion({0,9,-40});
-      objSeleccionado[camara_activa] = MODELO;
+      if(objSeleccionado[camara_activa] == MODELO){
+         r2->deseleccionar();
+         camaras[camara_activa]->unsetSeleccion();
+         objSeleccionado[camara_activa] = NO;
+      }
+      else{
+         std::cout << "Se ha seleccionado el modelo jerarquico R2\n";
+         deseleccionarObjeto();
+         r2->seleccionar();
+         camaras[camara_activa]->setSeleccion({0,9,-40});
+         objSeleccionado[camara_activa] = MODELO;
+      }
    }
    else if(comparaColores({1,0,0},color)){
-      std::cout << "Se ha seleccionado el tetraedro\n";
-      deseleccionarObjeto();
-      tetraedro->seleccionar();
-      camaras[camara_activa]->setSeleccion({-50,-50,100});
-      objSeleccionado[camara_activa] = TETRAEDRO;
+      if(objSeleccionado[camara_activa] == TETRAEDRO){
+         tetraedro->deseleccionar();
+         camaras[camara_activa]->unsetSeleccion();
+         objSeleccionado[camara_activa] = NO;
+      }
+      else{
+         std::cout << "Se ha seleccionado el tetraedro\n";
+         deseleccionarObjeto();
+         tetraedro->seleccionar();
+         camaras[camara_activa]->setSeleccion({-50,-50,100});
+         objSeleccionado[camara_activa] = TETRAEDRO;
+      }
    }
    else if(comparaColores({0,1,0},color)){
-      std::cout << "Se ha seleccionado el cubo\n";
-      deseleccionarObjeto();
-      cubo->seleccionar();
-      camaras[camara_activa]->setSeleccion({80,-25,0});
-      objSeleccionado[camara_activa] = CUBO;
+      if(objSeleccionado[camara_activa] == CUBO){
+         cubo->deseleccionar();
+         camaras[camara_activa]->unsetSeleccion();
+         objSeleccionado[camara_activa] = NO;
+      }
+      else{
+         std::cout << "Se ha seleccionado el cubo\n";
+         deseleccionarObjeto();
+         cubo->seleccionar();
+         camaras[camara_activa]->setSeleccion({80,-25,0});
+         objSeleccionado[camara_activa] = CUBO;
+      }
    }
    else if(comparaColores({0,0,1},color)){
-      std::cout << "Se ha seleccionado la lata\n";
-      deseleccionarObjeto();
-      lata->seleccionar();
-      camaras[camara_activa]->setSeleccion({80,-50,80});
-      objSeleccionado[camara_activa] = LATA;
+      if(objSeleccionado[camara_activa] == LATA){
+         lata->deseleccionar();
+         camaras[camara_activa]->unsetSeleccion();
+         objSeleccionado[camara_activa] = NO;
+      }
+      else{
+         std::cout << "Se ha seleccionado la lata\n";
+         deseleccionarObjeto();
+         lata->seleccionar();
+         camaras[camara_activa]->setSeleccion({80,-50,80});
+         objSeleccionado[camara_activa] = LATA;
+      }
    }
    else if(comparaColores({1,1,0},color)){
-      std::cout << "Se ha seleccionado la esfera (mundo)\n";
-      deseleccionarObjeto();
-      esfera->seleccionar();
-      camaras[camara_activa]->setSeleccion({-70,150,0});
-      objSeleccionado[camara_activa] = MUNDO;
+      if(objSeleccionado[camara_activa] == MUNDO){
+         esfera->deseleccionar();
+         camaras[camara_activa]->unsetSeleccion();
+         objSeleccionado[camara_activa] = NO;
+      }
+      else{
+         std::cout << "Se ha seleccionado la esfera (mundo)\n";
+         deseleccionarObjeto();
+         esfera->seleccionar();
+         camaras[camara_activa]->setSeleccion({-70,150,0});
+         objSeleccionado[camara_activa] = MUNDO;
+      }
    }
    else if(comparaColores({0,1,1},color)){
-      std::cout << "Se ha seleccionado el peon\n";
-      deseleccionarObjeto();
-      peon->seleccionar();
-      camaras[camara_activa]->setSeleccion({-70,0,0});
-      objSeleccionado[camara_activa] = PEON;
+      if(objSeleccionado[camara_activa] == PEON){
+         peon->deseleccionar();
+         camaras[camara_activa]->unsetSeleccion();
+         objSeleccionado[camara_activa] = NO;
+      }
+      else{
+         std::cout << "Se ha seleccionado el peon\n";
+         deseleccionarObjeto();
+         peon->seleccionar();
+         camaras[camara_activa]->setSeleccion({-70,0,0});
+         objSeleccionado[camara_activa] = PEON;
+      }
    }
    else if(comparaColores({1,0,1},color)){
-      std::cout << "Se ha seleccionado la hormiga\n";
-      deseleccionarObjeto();
-      hormiga->seleccionar();
-      camaras[camara_activa]->setSeleccion({30,-30,80});
-      objSeleccionado[camara_activa] = HORMIGA;
+      if(objSeleccionado[camara_activa] == HORMIGA){
+         hormiga->deseleccionar();
+         camaras[camara_activa]->unsetSeleccion();
+         objSeleccionado[camara_activa] = NO;
+      }
+      else{
+         std::cout << "Se ha seleccionado la hormiga\n";
+         deseleccionarObjeto();
+         hormiga->seleccionar();
+         camaras[camara_activa]->setSeleccion({30,-30,80});
+         objSeleccionado[camara_activa] = HORMIGA;
+      }
    }
    else{
       camaras[camara_activa]->unsetSeleccion();
