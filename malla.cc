@@ -326,7 +326,7 @@ void Malla3D::draw(bool puntos, bool alambre, bool solido, bool ajedrez, bool sm
       calcular_normales();
    }
 
-   if(!ct.empty()){
+   if(!ct.empty() && (solido || smooth || flat)){
       glEnable(GL_TEXTURE_2D);
       t.activar();
    }

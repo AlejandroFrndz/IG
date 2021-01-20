@@ -108,3 +108,22 @@ void Camara::zoom(float factor){
     bottom *= factor;
     top *= factor;
 }
+
+void Camara::mover(bool forward, int dir){
+    if(forward){
+        Tupla3f vpn = eye - at;
+        vpn = vpn.normalized();
+        eye = eye + vpn * dir;
+        at = at + vpn * dir;
+    }
+    else{
+        Tupla3f u = up.cross(eye - at);
+        u = u.normalized();
+        eye = eye + u * dir;
+        at = at + u * dir;
+    }
+}
+
+bool Camara::enFP(){
+    return !enSeleccion;
+}

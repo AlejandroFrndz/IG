@@ -44,6 +44,8 @@ class Camara{
         void zoom(float factor);
         void setSeleccion(Tupla3f new_at);
         void unsetSeleccion();
+        void mover(bool forward, int dir);
+        bool enFP();
 };
 
 #endif

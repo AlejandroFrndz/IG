@@ -99,7 +99,7 @@ void Escena::crear_objetos(){
    //Camaras
    camaras[0] = new Camara({0,70,400},{0,0,0},{0,1,0},0,50,2000);
    camaras[1] = new Camara({0,70,200},{0,0,0},{0,1,0},1,50,2000);
-   camaras[2] = new Camara({30,10,150},{0,0,0},{0,1,0},1,50,2000);
+   camaras[2] = new Camara({30,10,170},{0,0,0},{0,1,0},1,50,2000);
 }
 
 void Escena::crear_materiales(){
@@ -236,7 +236,7 @@ void Escena::dibujar()
 
    if(hormigaB){
       glPushMatrix();
-         glTranslatef(30,-30,80);
+         glTranslatef(30,-30,70);
          glScalef(2,2,2);
          hormiga->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
       glPopMatrix();
@@ -245,10 +245,10 @@ void Escena::dibujar()
    glPushMatrix();
       glTranslatef(-1024,-50,1024);
       glRotatef(-90,1,0,0);
-      suelo->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
+      suelo->draw(puntos,lineas,solido,false,smooth,flat,modo_dibujado);
    glPopMatrix();
 
-   skybox->draw(puntos,lineas,solido,ajedrez,smooth,flat,modo_dibujado);
+   skybox->draw(puntos,lineas,solido,false,smooth,flat,modo_dibujado);
 
 
    if(smooth || flat){
@@ -317,7 +317,7 @@ void Escena::dibujaSeleccion(){
 
    if(hormigaB){
       glPushMatrix();
-         glTranslatef(30,-30,80);
+         glTranslatef(30,-30,70);
          glScalef(2,2,2);
          hormiga->drawSeleccion();
       glPopMatrix();
@@ -1291,34 +1291,39 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
    switch ( Tecla1 )
    {
 	   case GLUT_KEY_LEFT:
-         camaras[camara_activa]->rotar(1,1);
-         //Observer_angle_y-- ;
+         if(camaras[camara_activa]->enFP())
+            camaras[camara_activa]->mover(false,-2);
+         else
+            camaras[camara_activa]->rotar(1,-1);
          break;
 	   case GLUT_KEY_RIGHT:
-         camaras[camara_activa]->rotar(1,-1);
-         //Observer_angle_y++ ;
+         if(camaras[camara_activa]->enFP())
+            camaras[camara_activa]->mover(false,2);
+         else
+            camaras[camara_activa]->rotar(1,1);
          break;
 	   case GLUT_KEY_UP:
-         camaras[camara_activa]->rotar(0,1);
-         //Observer_angle_x-- ;
+         if(camaras[camara_activa]->enFP())
+            camaras[camara_activa]->mover(true,-2);
+         else
+            camaras[camara_activa]->rotar(0,-1);
          break;
 	   case GLUT_KEY_DOWN:
-         camaras[camara_activa]->rotar(0,-1);
-         //Observer_angle_x++ ;
+         if(camaras[camara_activa]->enFP())
+            camaras[camara_activa]->mover(true,2);
+         else
+            camaras[camara_activa]->rotar(0,1);
          break;
 	   case GLUT_KEY_PAGE_UP:
          camaras[camara_activa]->zoom(1.2);
          change_projection();
-         //Observer_distance *=1.2 ;
          break;
 	   case GLUT_KEY_PAGE_DOWN:
          camaras[camara_activa]->zoom(0.8333);
          change_projection();
-         //Observer_distance /= 1.2 ;
          break;
 	}
 
-	//std::cout << Observer_distance << std::endl;
 }
 
 //**************************************************************************

@@ -422,7 +422,7 @@ void ObjRevolucion::draw(bool puntos, bool alambre, bool solido, bool ajedrez, b
       calcular_normales();
    }
 
-   if(!ct.empty()){
+   if(!ct.empty() && (solido || smooth || flat)){
       glEnable(GL_TEXTURE_2D);
       t.activar();
    }
